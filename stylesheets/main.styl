@@ -1,0 +1,293 @@
+.support
+  display none
+  position: absolute;
+  top: 0;
+  font-size 8px
+  right: 0;
+  padding: 20px;
+  color: white;
+  a
+    color white
+
+@media screen and (min-width: 1100px)
+  .support
+    display block
+
+.main-header
+  text-align: center;
+  font-family: "Museo";
+  font-size: 40px;
+  text-transform: uppercase;
+  color: rgba(#0f0,.7);
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 4px #F25500, 0 0 7px #F25500, 0 0 8px #F25500, 0 0 10px #F25500, 0 0 15px #F25500;
+
+.material-icons
+  vertical-align: bottom;
+.voting
+  position: absolute;
+  background: #151515 url("../images/bkg.png") 0 0;
+  border-radius: 21px;
+  width: 40px;
+  height: 40px;
+  left: -20px;
+  top: -20px;
+  .vote
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    text-align: center;
+    top: 0;
+    line-height: 40px
+    font-size 11px
+  [data-arrow="down"]
+    -moz-border-radius: 0 0 30px 30px;
+    -webkit-border-radius: 0 0 30px 30px;
+    width: 30px;
+    height: 15px;
+    border-bottom-left-radius: 30px;
+    border-bottom-right-radius: 30px;
+    border: 5px solid red;
+    cursor pointer
+    position relative
+    z-index 2
+    opacity .2
+    border-top: 0;
+    &:hover
+      opacity 1.0
+
+
+  [data-arrow="up"]
+    -moz-border-radius: 30px 30px 0 0;
+    -webkit-border-radius: 30px 30px 0 0;
+    width: 30px;
+    height: 15px;
+    border-top-left-radius: 30px;
+    border-top-right-radius: 30px;
+    border: 5px solid green;
+    cursor pointer
+    position relative
+    z-index 2
+    opacity .2
+    border-bottom: 0;
+    &:hover
+      opacity 1.0
+
+
+
+
+body
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: #151515 url("../images/bkg.png") 0 0;
+  color: #eaeaea;
+  line-height: 1.5;
+  font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
+  .container
+    [data-selected="true"]
+      color: #00FF00
+    > .header
+      > .times
+        display: flex;
+        justify-content: center;
+        max-width: 750px;
+        margin: 0 auto;
+        font-size: 12px;
+        padding 10px 0
+        > .time
+          cursor pointer
+          display: inline-block;
+          margin: 0 10px;
+          background: #151515;
+          padding: 5px;
+          &[data-selected=true]
+            background: lighten(#151515,10);
+      > .nav
+        display: flex;
+        justify-content: flex-end;
+        font-size: 11px;
+        padding: 10px;
+        position: absolute;
+        top: 0;
+        padding: 22px;
+        > .nav-item
+          padding 0 10px
+          &:hover
+            cursor pointer
+            text-decoration: underline;
+      > .subjects
+        max-width: 750px
+        margin 0 auto
+        display: flex;
+        justify-content: space-around;
+        padding: 10px;
+        margin: 0 auto;
+        overflow hidden
+        padding 10px 0
+        .subject
+          padding 0 15px
+          &:hover
+            cursor pointer
+            text-decoration: underline;
+    .questions-container
+      margin 0 auto
+      .question
+        box-sizing: border-box;
+        text-align left
+        display inline-block
+        padding: 20px;
+        border: 1px white dashed;
+        margin: 20px;
+        word-wrap: break-word;
+        white-space: pre-wrap;
+        width 300px
+        .below-threshold
+          display none
+          .num
+            color #f00
+        &[data-hidden="data-hidden"]
+          > div
+            display none
+          > div.below-threshold
+            display block
+            cursor pointer
+            &:hover
+              text-decoration underline
+        &.no-border
+          border none
+          margin 0
+        .past
+          text-align center
+          padding-top 20px
+          margin-top 20px
+          border-top: 1px white dashed;
+          .old-questions
+            padding 20px
+            text-align left
+            border: 1px dashed rgba(white,.2);
+            margin-top: 20px;
+          .topic
+            display inline-block
+          .link
+            position: absolute;
+            right: 20px
+            cursor pointer
+            color #09FBFC
+            &:hover
+              text-decoration underline
+          .old-question
+            position relative
+            [data-answer]
+              opacity .2
+              &[data-selected]
+                opacity .5
+                text-decoration: underline;
+            .question-title, .question-body
+              opacity .5
+
+
+          > .options
+            padding-top 20px
+            display: flex;
+            justify-content: space-around;
+            .jump
+              color #09FBFC
+              cursor pointer
+              &:hover
+                text-decoration: underline;
+            > i
+              color yellow
+              cursor pointer
+            > i[data-disabled="true"]
+              color gray
+              cursor default
+        .answers .text
+          display inline
+          list-style-position inside
+          text-indent 2em
+          &:before
+            content: '\2022'
+            margin: 0 9px;
+            font-size: 10px
+            vertical-align: middle;
+        > .answers .text
+          &:hover
+            cursor pointer
+            text-decoration: underline;
+          &:not([data-next^='leaf']):after
+            content: " *"
+            color red
+        .answers
+          > div
+            position relative
+          .count
+            opacity .2
+
+        .asterisk
+          font-size: 12px;
+          margin-top: 20px;
+          &:before
+            content: "* "
+            color red
+        &[data-vote="up"] [data-arrow="up"]
+          opacity 1.0
+        &[data-vote="down"] [data-arrow="down"]
+          opacity 1.0
+        .open-pop
+          text-align center
+          &:hover
+            cursor pointer
+            text-decoration: underline;
+        .new-question
+          .text-area-container
+            position: relative;
+            width 100%
+            textarea, .resizer
+              min-height: 25px;
+              font-family: sans-serif;
+              font-size: 14px;
+              box-sizing: border-box;
+              padding: 4px;
+              border: 1px solid;
+              overflow: hidden;
+              width: 100%;
+              line-height normal
+              margin-bottom 2px
+              left 0
+
+            textarea
+              color white
+              height: 100%;
+              position: absolute;
+              resize:none;
+              white-space: normal;
+              background: rgba(white, .2)
+              &.question-body
+                color #00FF00
+                margin-bottom 10px
+              &.question-title
+                color #FF6600
+                margin-bottom 10px
+            .resizer
+              visibility: hidden;
+              white-space: pre-wrap;
+              word-wrap: break-word;
+              overflow-wrap: break-word;
+            .characters
+              position: absolute;
+              text-align: right;
+              font-size: 13px;
+              color: gray;
+              right: 4px;
+              bottom: 1px;
+          input[type=submit]
+            margin-top 5px
+            background rgba(gray,.5)
+            color white;
+            cursor pointer
+      .question-body
+        color #00FF00
+        margin-bottom 10px
+      .question-title
+        color #FF6600
+        margin-bottom 10px
