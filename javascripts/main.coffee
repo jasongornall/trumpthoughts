@@ -11,9 +11,11 @@ firebase.initializeApp(config);
 # move cursor
 $('trix-editor')[0].editor.setSelectedRange([100, 100])
 
-finishLogin = (user, token) ->
-  console.log user, token
-
+firebase.auth().onAuthStateChanged (user) ->
+  $('body > #auth').html teacup.render ->
+    div ->
+      img src: user.photoURL
+      div -> "logged in as: #{user.displayName}"
 
 
 $('#submit').on 'click', (obj) ->
