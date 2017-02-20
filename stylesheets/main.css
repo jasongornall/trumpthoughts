@@ -15,6 +15,10 @@ body {
   line-height: 1.5;
   font-family: -apple-system, sans-serif;
 }
+body #viewport {
+  width: 500px;
+  height: 500px;
+}
 body .trix-container {
   max-width: 640px;
   margin: 0 auto;
@@ -34,6 +38,7 @@ body #auth img {
   width: 25px;
   height: 25px;
   border-radius: 25px;
+  vertical-align: middle;
 }
 body #popups > .submit {
   color: #fff;

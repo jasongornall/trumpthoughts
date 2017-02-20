@@ -1,7 +1,7 @@
 .trix-container textarea
 {
     border: 1px solid #EEEEEE;
-    box-shadow: 1px 1px 0 #DDDDDD;
+    box-shadow: 2px 2px 0 #DDDDDD;
     display: block;
     font-family: 'Marck Script',cursive;
     font-size: 18px;
@@ -14,11 +14,9 @@
     background-image: -webkit-linear-gradient(top , transparent, transparent 49px,#E7EFF8 0);
     -webkit-background-size: 100% 50px;
     background-size: 100% 50px;
+    max-width: 98%;
+    box-sizing: border-box;
 }
-.trix-container form {
-    background-image: url('http://www.zingerbug.com/Backgrounds/background_images/off_white_parchment_paper_wallpaper_texture_seamless.jpg');
-}
-
 .modalDialog {
     position: fixed;
     font-family: Arial, Helvetica, sans-serif;
