@@ -12,14 +12,17 @@ firebase.initializeApp(config);
 $('trix-editor')[0].editor.setSelectedRange([100, 100])
 
 firebase.auth().onAuthStateChanged (user) ->
-  $('body > #auth').html teacup.render ->
-    div  '.btn', ->
-      span -> "logged in as: "
-      img src: user.photoURL
-      span -> " #{user.displayName}"
+  if user
+    window.logged_in = true
+    $('body > #auth').html teacup.render ->
+      div  '.btn', ->
+        span -> "logged in as: "
+        img src: user.photoURL
+        span -> " #{user.displayName}"
+  else
+    window.logged_in = false
 
-
-$('#submit').on 'click', (obj) ->
+loginPopup = ->
   $('body #popups').append(teacup.render ->
     div '.modalDialog submit', ->
       div '.wrapper', ->
@@ -52,3 +55,9 @@ $('#submit').on 'click', (obj) ->
           finishLogin(token, user)
         ).catch (error) ->
           console.log error if error
+
+$('#submit').on 'click', (obj) ->
+  if window.logged_in
+    console.log 'ehhh'
+  else
+    loginPopup()
