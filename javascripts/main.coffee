@@ -47,6 +47,8 @@ loginPopup = ->
     switch $el.data 'option'
       when 'google'
         provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope 'https://www.googleapis.com/auth/analytics.readonly'
+        provider.addScope 'https://www.googleapis.com/auth/plus.login'
         firebase.auth().signInWithPopup(provider).then((result) ->
           token = result.credential.accessToken
           user = result.user

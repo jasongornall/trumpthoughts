@@ -92,6 +92,8 @@ loginPopup = function() {
     switch ($el.data('option')) {
       case 'google':
         provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('https://www.googleapis.com/auth/analytics.readonly');
+        provider.addScope('https://www.googleapis.com/auth/plus.login');
         return firebase.auth().signInWithPopup(provider).then(function(result) {
           var token, user;
           token = result.credential.accessToken;
