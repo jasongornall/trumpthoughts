@@ -24,7 +24,7 @@ $('#submit').on 'click', (obj) ->
     div '.modalDialog submit', ->
       div '.wrapper', ->
         span '.close', -> 'x'
-        h3 -> 'Pick your submission type'
+        h3 -> 'Login to add your content'
         div '.navigation', ->
           span '.option', 'data-option': 'google', ->
             img src: 'https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg'

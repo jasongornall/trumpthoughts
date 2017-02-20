@@ -39,7 +39,7 @@ $('#submit').on('click', function(obj) {
           return 'x';
         });
         h3(function() {
-          return 'Pick your submission type';
+          return 'Login to add your content';
         });
         return div('.navigation', function() {
           span('.option', {
