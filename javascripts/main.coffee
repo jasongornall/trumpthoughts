@@ -9,8 +9,6 @@ config = {
 firebase.initializeApp(config);
 
 # move cursor
-$('trix-editor')[0].editor.setSelectedRange([100, 100])
-
 firebase.auth().onAuthStateChanged (user) ->
   if user
     window.logged_in = user

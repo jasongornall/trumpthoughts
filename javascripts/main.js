@@ -13,8 +13,6 @@ config = {
 
 firebase.initializeApp(config);
 
-$('trix-editor')[0].editor.setSelectedRange([100, 100]);
-
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
     window.logged_in = user;
