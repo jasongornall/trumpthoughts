@@ -49,12 +49,7 @@ loginPopup = ->
         provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope 'https://www.googleapis.com/auth/user.birthday.read'
         provider.addScope 'https://www.googleapis.com/auth/userinfo.profile'
-        firebase.auth().signInWithPopup(provider).then((result) ->
-          token = result.credential.accessToken
-          user = result.user
-          finishLogin(token, user)
-        ).catch (error) ->
-          console.log error if error
+        firebase.auth().signInWithPopup(provider)
 
 $('.submit').on 'click', (e) ->
   $el = $ e.currentTarget

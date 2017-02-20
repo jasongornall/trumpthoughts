@@ -94,16 +94,7 @@ loginPopup = function() {
         provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope('https://www.googleapis.com/auth/user.birthday.read');
         provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
-        return firebase.auth().signInWithPopup(provider).then(function(result) {
-          var token, user;
-          token = result.credential.accessToken;
-          user = result.user;
-          return finishLogin(token, user);
-        })["catch"](function(error) {
-          if (error) {
-            return console.log(error);
-          }
-        });
+        return firebase.auth().signInWithPopup(provider);
     }
   });
 };
