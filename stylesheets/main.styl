@@ -1,3 +1,11 @@
+.main-header
+  text-align: center;
+  font-family: "Museo";
+  font-size: 40px;
+  text-transform: uppercase;
+  color: rgba(#0f0,.7);
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 4px #F25500, 0 0 7px #F25500, 0 0 8px #F25500, 0 0 10px #F25500, 0 0 15px #F25500;
+
 body
   text-align: center;
   margin: 0;
@@ -14,3 +22,28 @@ body
     #deartrump
       min-height: 35em;
       padding 0.4em 0.6em
+
+  #auth
+    position fixed
+    top 0
+    right 0
+    margin 10px
+  #popups
+    > .submit
+      color white;
+      .fixed
+        height 30px
+        margin-top 10px
+      .navigation
+        .option
+          margin 0 10px
+          > span
+            position relative
+            top -3px
+            left 5px
+      .login, .signup, .navigation
+        padding: 15px 0;
+      .login, .signup
+        h3
+          margin 0
+        border-top 2px solid white
