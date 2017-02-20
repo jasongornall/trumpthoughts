@@ -59,10 +59,15 @@ $('.submit').on 'click', (e) ->
   type = $el.data 'type'
   if window.logged_in
     trump_letter = $('#trump-letter').text()
-    firebase.database().ref(type).push {
+
+    ref = firebase.database().ref(type).push()
+    ref.set {
       letter: trump_letter
-      uid: window.logged_in.uid
       time: firebase.database.ServerValue.TIMESTAMP
+    }
+    firebase.database().ref("users/#{window.logged_in.uid}/letters").push {
+      letter: trump_letter
+      location: ref.toString()
     }
   else
     loginPopup()

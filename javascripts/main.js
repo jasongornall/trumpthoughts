@@ -107,15 +107,19 @@ loginPopup = function() {
 };
 
 $('.submit').on('click', function(e) {
-  var $el, trump_letter, type;
+  var $el, ref, trump_letter, type;
   $el = $(e.currentTarget);
   type = $el.data('type');
   if (window.logged_in) {
     trump_letter = $('#trump-letter').text();
-    return firebase.database().ref(type).push({
+    ref = firebase.database().ref(type).push();
+    ref.set({
       letter: trump_letter,
-      uid: window.logged_in.uid,
       time: firebase.database.ServerValue.TIMESTAMP
+    });
+    return firebase.database().ref("users/" + window.logged_in.uid + "/letters").push({
+      letter: trump_letter,
+      location: ref.toString()
     });
   } else {
     return loginPopup();
