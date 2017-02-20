@@ -57,7 +57,8 @@ body #answers {
 body #answers > div {
   width: 50%;
   display: inline-block;
-  white-space: pre;
+  white-space: pre-wrap;
+  text-align: left;
   vertical-align: top;
 }
 body #answers > div#positive {
