@@ -129,7 +129,7 @@ $('.submit').on('click', function(e) {
 _ref = ['negative', 'positive'];
 _fn = function(response_type) {
   return firebase.database().ref(response_type).on('child_added', function(snapshot) {
-    return $("#" + response_type).append(teacup.render(function() {
+    return $(teacup.render(function() {
       return div(".response " + response_type, {
         'data': {
           key: snapshot.key,
@@ -140,7 +140,7 @@ _fn = function(response_type) {
           return snapshot.child('letter').val();
         });
       });
-    }));
+    })).prependTo("#" + response_type).hide().slideDown();
   });
 };
 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
