@@ -108,7 +108,8 @@ $('.submit').on('click', function(e) {
     ref = firebase.database().ref(type).push();
     ref.set({
       letter: trump_letter,
-      time: firebase.database.ServerValue.TIMESTAMP
+      time: firebase.database.ServerValue.TIMESTAMP,
+      uid: window.logged_in.uid
     });
     return firebase.database().ref("users/" + window.logged_in.uid + "/letters").push({
       letter: trump_letter,

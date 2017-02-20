@@ -61,6 +61,7 @@ $('.submit').on 'click', (e) ->
     ref.set {
       letter: trump_letter
       time: firebase.database.ServerValue.TIMESTAMP
+      uid: window.logged_in.uid
     }
     firebase.database().ref("users/#{window.logged_in.uid}/letters").push {
       letter: trump_letter
