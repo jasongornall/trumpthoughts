@@ -58,7 +58,7 @@ $('.submit').on 'click', (e) ->
   $el = $ e.currentTarget
   type = $el.data 'type'
   if window.logged_in
-    trump_letter = $('#trump-letter').text()
+    trump_letter = $('#trump-letter').val()
 
     ref = firebase.database().ref(type).push()
     ref.set {
@@ -71,3 +71,15 @@ $('.submit').on 'click', (e) ->
     }
   else
     loginPopup()
+
+
+
+for response_type in ['negative', 'positive']
+  firebase.database().ref(response_type).on 'child_added', (child) ->
+    $("##{response_type}").append teacup.render ->
+      div ".response #{response_type}", 'data': {
+        key: child.name()
+        time: child.get('time').val()
+      }, ->
+        div '.body', -> child.get('letter').val()
+
