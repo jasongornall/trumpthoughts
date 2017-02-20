@@ -11,6 +11,7 @@
     resize: none;
     height: 689px;
     width: 530px;
+    background-image: -moz-linear-gradient(top , transparent, transparent 49px,#E7EFF8 0px)
     background-image: -webkit-linear-gradient(top , transparent, transparent 49px,#E7EFF8 0);
     -webkit-background-size: 100% 50px;
     background-size: 100% 50px;
