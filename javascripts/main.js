@@ -17,7 +17,7 @@ $('trix-editor')[0].editor.setSelectedRange([100, 100]);
 
 firebase.auth().onAuthStateChanged(function(user) {
   if (user) {
-    window.logged_in = true;
+    window.logged_in = user;
     return $('body > #auth').html(teacup.render(function() {
       return div('.btn', function() {
         span(function() {
@@ -109,11 +109,16 @@ loginPopup = function() {
 };
 
 $('.submit').on('click', function(e) {
-  var $el;
+  var $el, trump_letter, type;
   $el = $(e.currentTarget);
-  console.log('rrr', window.logged_in, $el.data('type'));
+  type = $el.data('type');
   if (window.logged_in) {
-    return console.log('ehhh');
+    trump_letter = $('#trump-letter').text();
+    return firebase.database().ref(type).push({
+      letter: trump_letter,
+      uid: window.logged_in.uid,
+      time: firebase.database.ServerValue.TIMESTAMP
+    });
   } else {
     return loginPopup();
   }

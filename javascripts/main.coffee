@@ -13,7 +13,7 @@ $('trix-editor')[0].editor.setSelectedRange([100, 100])
 
 firebase.auth().onAuthStateChanged (user) ->
   if user
-    window.logged_in = true
+    window.logged_in = user
     $('body > #auth').html teacup.render ->
       div  '.btn', ->
         span -> "logged in as: "
@@ -58,8 +58,13 @@ loginPopup = ->
 
 $('.submit').on 'click', (e) ->
   $el = $ e.currentTarget
-  console.log 'rrr', window.logged_in, $el.data 'type'
+  type = $el.data 'type'
   if window.logged_in
-    console.log 'ehhh'
+    trump_letter = $('#trump-letter').text()
+    firebase.database().ref(type).push {
+      letter: trump_letter
+      uid: window.logged_in.uid
+      time: firebase.database.ServerValue.TIMESTAMP
+    }
   else
     loginPopup()
