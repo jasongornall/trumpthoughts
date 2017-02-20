@@ -3,8 +3,7 @@ body {
   margin: 0;
   padding: 0;
   background: #fff;
-  font-color: #000;
-  color: #eaeaea;
+  color: #000;
   line-height: 1.5;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
