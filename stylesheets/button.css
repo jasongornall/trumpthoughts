@@ -56,13 +56,13 @@ body .btn:active {
   padding: 6px 14px 4px;
 }
 
-body .btn-facebook:hover { color:#000000; background-color: #3b5998; }
+body .btn-facebook { color:#000000; background-color: #3b5998; }
 body .btn-facebook:hover { background-color:#365899; }
 
-body .btn-red:hover { color:#000000; background-color: red }
+body .btn-red { color:white; background-color: red }
 body .btn-red:hover { background-color:#f44336; }
 
-body .btn-green:hover { color:#000000; background-color: green }
+body .btn-green { color:white; background-color: green }
 body .btn-green:hover { background-color:#4CAF50; }
 
 body .btn-gray { color:#000000; background-color: #F5F5F5; }
