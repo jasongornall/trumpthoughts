@@ -56,7 +56,9 @@ loginPopup = ->
         ).catch (error) ->
           console.log error if error
 
-$('#submit').on 'click', (obj) ->
+$('.submit').on 'click', (e) ->
+  $el = $ e.currentTarget
+  console.log 'rrr', window.logged_in, $el.data 'type'
   if window.logged_in
     console.log 'ehhh'
   else

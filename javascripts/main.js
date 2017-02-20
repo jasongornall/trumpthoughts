@@ -108,7 +108,10 @@ loginPopup = function() {
   });
 };
 
-$('#submit').on('click', function(obj) {
+$('.submit').on('click', function(e) {
+  var $el;
+  $el = $(e.currentTarget);
+  console.log('rrr', window.logged_in, $el.data('type'));
   if (window.logged_in) {
     return console.log('ehhh');
   } else {
