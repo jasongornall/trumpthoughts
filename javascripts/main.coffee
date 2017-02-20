@@ -75,11 +75,11 @@ $('.submit').on 'click', (e) ->
 
 
 for response_type in ['negative', 'positive']
-  firebase.database().ref(response_type).on 'child_added', (child) ->
+  firebase.database().ref(response_type).on 'child_added', (snapshot) ->
     $("##{response_type}").append teacup.render ->
       div ".response #{response_type}", 'data': {
-        key: child.name()
-        time: child.get('time').val()
+        key: snapshot.key
+        time: snapshot.child('time').val()
       }, ->
-        div '.body', -> child.get('letter').val()
+        div '.body', -> snapshot.child('letter').val()
 

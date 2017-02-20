@@ -129,16 +129,16 @@ $('.submit').on('click', function(e) {
 _ref = ['negative', 'positive'];
 for (_i = 0, _len = _ref.length; _i < _len; _i++) {
   response_type = _ref[_i];
-  firebase.database().ref(response_type).on('child_added', function(child) {
+  firebase.database().ref(response_type).on('child_added', function(snapshot) {
     return $("#" + response_type).append(teacup.render(function() {
       return div(".response " + response_type, {
         'data': {
-          key: child.name(),
-          time: child.get('time').val()
+          key: snapshot.key,
+          time: snapshot.child('time').val()
         }
       }, function() {
         return div('.body', function() {
-          return child.get('letter').val();
+          return snapshot.child('letter').val();
         });
       });
     }));
