@@ -2,11 +2,13 @@ body {
   text-align: center;
   margin: 0;
   padding: 0;
-  background: #151515 url("../images/bkg.png") 0 0;
+  background: #fff;
+  font-color: #000;
   color: #eaeaea;
   line-height: 1.5;
   font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal, monospace;
 }
-body textarea {
-  background: #fefefe;
+body .trix-container {
+  max-width: 640px;
+  margin: 0 auto;
 }
