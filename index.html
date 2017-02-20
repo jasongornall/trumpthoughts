@@ -1,7 +1,15 @@
 <!DOCTYPE html>
 <html>
   <head>
-
+    <script>
+      (function(){
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect != location.href) {
+          history.replaceState(null, null, redirect);
+        }
+      })();
+    </script>
     <meta property="og:url"           content="https://infernalscoop.com/" />
     <meta property="og:type"          content="website" />
     <meta property="og:title"         content="Infernal Scoop" />
