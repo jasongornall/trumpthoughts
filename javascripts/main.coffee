@@ -1,8 +1,19 @@
 msnry = null
-ref = new Firebase "https://trump-64059.firebaseio.com/"
+config = {
+  apiKey: "AIzaSyBmPkme_3537O_YbLRlq27PiFMOtNi4vP4",
+  authDomain: "trump-64059.firebaseapp.com",
+  databaseURL: "https://trump-64059.firebaseio.com",
+  storageBucket: "trump-64059.appspot.com",
+  messagingSenderId: "57700495171"
+}
+firebase.initializeApp(config);
 
 # move cursor
 $('trix-editor')[0].editor.setSelectedRange([100, 100])
+
+finishLogin = (user, token) ->
+  console.log user, token
+
 
 
 $('#submit').on 'click', (obj) ->
@@ -21,34 +32,20 @@ $('#submit').on 'click', (obj) ->
           span '.option', 'data-option': 'twitter', ->
             img src: 'https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg'
             span -> 'Twitter'
-
-        div '.login', 'data-option': 'login', ->
-          h3 -> 'Login via email'
-
-          div ->
-            div -> 'email'
-            input '.user-name'
-          div ->
-            div -> 'password'
-            input '.password'
-          div '.fixed', ->
-            div '.btn', -> 'login'
-
-        div '.signup', 'data-option': 'signup', ->
-          h3 -> 'Signup via email'
-          div ->
-            div -> 'email'
-            input '.user-name'
-          div ->
-            div -> 'password'
-            input '.password'
-          div ->
-            div -> 'password (again)'
-            input '.password'
-          div '.fixed', ->
-            div '.btn', -> 'signup'
   )
   $('.modalDialog.submit').fadeIn()
   $('.modalDialog.submit .close').on 'click', (e) ->
     $el = $(e.currentTarget).closest('.modalDialog').fadeOut 'slow', ->
       $(this).remove()
+
+  $('.modalDialog.submit [data-option]').on 'click', (e) ->
+    $el = $ e.currentTarget
+    switch $el.data 'option'
+      when 'google'
+        provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider).then((result) ->
+          token = result.credential.accessToken
+          user = result.user
+          finishLogin(token, user)
+        ).catch (error) ->
+          console.log error if error
