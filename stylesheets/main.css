@@ -51,3 +51,21 @@ body #popups > .submit .navigation .option > span {
   top: -3px;
   left: 5px;
 }
+body #answers {
+  white-space: nowrap;
+}
+body #answers > div {
+  width: 50%;
+  display: inline-block;
+  white-space: pre;
+  vertical-align: top;
+}
+body #answers > div#positive {
+  border: 1px solid #008000;
+}
+body #answers > div#negative {
+  border: 1px solid #f00;
+}
+body #answers > div .response {
+  border: 1px solid #000;
+}

@@ -45,3 +45,17 @@ body
             position relative
             top -3px
             left 5px
+
+  #answers
+    white-space nowrap
+    > div
+      width: 50%;
+      display: inline-block;
+      white-space: pre;
+      vertical-align: top;
+      &#positive
+        border 1px solid green
+      &#negative
+        border 1px solid red
+      .response
+        border 1px solid black
