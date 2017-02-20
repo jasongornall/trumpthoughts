@@ -17,12 +17,15 @@ $('trix-editor')[0].editor.setSelectedRange([100, 100]);
 
 firebase.auth().onAuthStateChanged(function(user) {
   return $('body > #auth').html(teacup.render(function() {
-    return div(function() {
+    return div('.btn', function() {
+      span(function() {
+        return "logged in as: ";
+      });
       img({
         src: user.photoURL
       });
-      return div(function() {
-        return "logged in as: " + user.displayName;
+      return span(function() {
+        return " " + user.displayName;
       });
     });
   }));

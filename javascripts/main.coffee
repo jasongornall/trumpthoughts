@@ -13,9 +13,10 @@ $('trix-editor')[0].editor.setSelectedRange([100, 100])
 
 firebase.auth().onAuthStateChanged (user) ->
   $('body > #auth').html teacup.render ->
-    div ->
+    div  '.btn', ->
+      span -> "logged in as: "
       img src: user.photoURL
-      div -> "logged in as: #{user.displayName}"
+      span -> " #{user.displayName}"
 
 
 $('#submit').on 'click', (obj) ->
