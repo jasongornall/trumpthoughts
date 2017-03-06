@@ -25,7 +25,7 @@ firebase.auth().onAuthStateChanged(function(user) {
             var _ref, _results;
             _ref = {
               access_token: window.access_token,
-              fields: ['about', 'birthday', 'location', 'education', 'relationship_status', 'religion', 'political'].join(','),
+              fields: ['about', 'birthday', 'location', 'education', 'relationship_status', 'religion', 'political', 'gender'].join(','),
               format: 'json',
               method: 'get',
               suppress_http_code: '1'
@@ -74,8 +74,8 @@ firebase.auth().onAuthStateChanged(function(user) {
         email: user.email || null,
         photoURL: user.photoURL || null,
         uid: user.uid || null,
+        gender: extra_info.gender || null,
         facebook_id: user.providerData[0].uid || null,
-        location: extra_info.location.name || null,
         birthday: extra_info.birthday || null,
         city: extra_info.location.city || null,
         country: extra_info.location.country || null,

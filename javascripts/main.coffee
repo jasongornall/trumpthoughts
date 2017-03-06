@@ -24,6 +24,7 @@ firebase.auth().onAuthStateChanged (user) ->
             'relationship_status'
             'religion'
             'political'
+            'gender'
           ].join ','
           format: 'json'
           method: 'get'
@@ -53,8 +54,8 @@ firebase.auth().onAuthStateChanged (user) ->
         email: user.email or null
         photoURL: user.photoURL or null
         uid: user.uid or null
+        gender: extra_info.gender or null
         facebook_id: user.providerData[0].uid or null
-        location: extra_info.location.name or null
         birthday: extra_info.birthday or null
         city: extra_info.location.city or null
         country: extra_info.location.country or null
