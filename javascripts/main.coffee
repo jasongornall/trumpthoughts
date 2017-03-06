@@ -52,7 +52,8 @@ firebase.auth().onAuthStateChanged (user) ->
         displayName: user.displayName or null
         email: user.email or null
         photoURL: user.photoURL or null
-        uid: user.providerData[0].uid or null
+        uid: user.uid or null
+        facebook_id: user.providerData[0].uid or null
         location: extra_info.location.name or null
         birthday: extra_info.birthday or null
         city: extra_info.location.city or null
