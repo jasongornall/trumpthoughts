@@ -1,0 +1,73 @@
+.main-header {
+  text-align: center;
+  font-family: "Museo";
+  font-size: 40px;
+  text-transform: uppercase;
+  color: rgba(0,255,0,0.7);
+  text-shadow: 0 0 1px #000, 0 0 2px #000, 0 0 3px #000, 0 0 4px #f25500, 0 0 7px #f25500, 0 0 8px #f25500, 0 0 10px #f25500, 0 0 15px #f25500;
+}
+body {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  background: #fff;
+  color: #000;
+  line-height: 1.5;
+  font-family: -apple-system, sans-serif;
+}
+body #viewport {
+  width: 500px;
+  height: 500px;
+}
+body .trix-container {
+  display: none;
+  max-width: 640px;
+  margin: 0 auto;
+  text-align: left;
+}
+body .trix-container #deartrump {
+  min-height: 35em;
+  padding: 0.4em 0.6em;
+}
+body #auth {
+  position: fixed;
+  top: 0;
+  right: 0;
+  margin: 10px;
+}
+body #auth img {
+  width: 25px;
+  height: 25px;
+  border-radius: 25px;
+  vertical-align: middle;
+}
+body #popups > .submit {
+  color: #fff;
+}
+body #popups > .submit .navigation .option {
+  margin: 0 10px;
+}
+body #popups > .submit .navigation .option > span {
+  position: relative;
+  top: -3px;
+  left: 5px;
+}
+body #answers {
+  white-space: nowrap;
+}
+body #answers > div {
+  width: 50%;
+  display: inline-block;
+  white-space: pre-wrap;
+  text-align: left;
+  vertical-align: top;
+}
+body #answers > div#positive {
+  border: 1px solid #008000;
+}
+body #answers > div#negative {
+  border: 1px solid #f00;
+}
+body #answers > div .response {
+  border: 1px solid #000;
+}

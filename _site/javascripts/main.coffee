@@ -1,0 +1,88 @@
+msnry = null
+config = {
+  apiKey: "AIzaSyBmPkme_3537O_YbLRlq27PiFMOtNi4vP4",
+  authDomain: "trump-64059.firebaseapp.com",
+  databaseURL: "https://trump-64059.firebaseio.com",
+  storageBucket: "trump-64059.appspot.com",
+  messagingSenderId: "57700495171"
+}
+firebase.initializeApp(config);
+
+# move cursor
+firebase.auth().onAuthStateChanged (user) ->
+  if user
+    window.logged_in = user
+    $('body > #auth').html teacup.render ->
+      div  '.btn', ->
+        span -> "logged in as: "
+        img src: user.photoURL
+        span -> " #{user.displayName}"
+  else
+    window.logged_in = false
+
+
+handleClose = (e) ->
+  $el = $(e.currentTarget).closest('.modalDialog').fadeOut 'slow', ->
+    $(this).remove()
+
+
+loginPopup = ->
+  $('body #popups').append(teacup.render ->
+    div '.modalDialog submit', ->
+      div '.wrapper', ->
+        span '.close', -> 'x'
+        h3 -> 'Login to add your content'
+        div '.navigation', ->
+          span '.option', 'data-option': 'facebook', ->
+            img src: 'https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg'
+            span -> 'Facebook'
+  )
+  $('.modalDialog.submit').fadeIn()
+  $('.modalDialog.submit .close').on 'click', handleClose
+
+  $('.modalDialog.submit [data-option]').on 'click', (e) ->
+    $el = $ e.currentTarget
+
+    switch $el.data 'option'
+      when 'facebook'
+        provider = new firebase.auth.FacebookAuthProvider();
+        provider.addScope('user_birthday')
+        provider.addScope('public_profile');
+        provider.addScope('email');
+        provider.addScope('user_location');
+        provider.addScope('user_hometown');
+        firebase.auth().signInWithPopup(provider)
+        handleClose e
+
+$('.submit').on 'click', (e) ->
+  $el = $ e.currentTarget
+  type = $el.data 'type'
+  if window.logged_in
+    trump_letter = $('#trump-letter').val()
+
+    ref = firebase.database().ref(type).push()
+    ref.set {
+      letter: trump_letter
+      time: firebase.database.ServerValue.TIMESTAMP
+      uid: window.logged_in.uid
+    }
+    firebase.database().ref("users/#{window.logged_in.uid}/letters").push {
+      letter: trump_letter
+      location: ref.toString()
+    }
+  else
+    loginPopup()
+
+
+
+for response_type in ['negative', 'positive']
+  do (response_type) ->
+    firebase.database().ref(response_type).on 'child_added', (snapshot) ->
+      $(teacup.render ->
+        div ".response #{response_type}", 'data': {
+          key: snapshot.key
+          time: snapshot.child('time').val()
+        }, ->
+          div '.body', -> snapshot.child('letter').val()
+      ).prependTo("##{response_type}").hide().slideDown();
+
