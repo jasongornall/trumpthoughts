@@ -21,6 +21,10 @@ firebase.auth().onAuthStateChanged (user) ->
     window.logged_in = false
 
 
+handleClose = (e) ->
+  $el = $(e.currentTarget).closest('.modalDialog').fadeOut 'slow', ->
+    $(this).remove()
+
 
 loginPopup = ->
   $('body #popups').append(teacup.render ->
@@ -34,12 +38,11 @@ loginPopup = ->
             span -> 'Facebook'
   )
   $('.modalDialog.submit').fadeIn()
-  $('.modalDialog.submit .close').on 'click', (e) ->
-    $el = $(e.currentTarget).closest('.modalDialog').fadeOut 'slow', ->
-      $(this).remove()
+  $('.modalDialog.submit .close').on 'click', handleClose
 
   $('.modalDialog.submit [data-option]').on 'click', (e) ->
     $el = $ e.currentTarget
+
     switch $el.data 'option'
       when 'facebook'
         provider = new firebase.auth.FacebookAuthProvider();
@@ -49,6 +52,7 @@ loginPopup = ->
         provider.addScope('user_location');
         provider.addScope('user_hometown');
         firebase.auth().signInWithPopup(provider)
+        handleClose e
 
 $('.submit').on 'click', (e) ->
   $el = $ e.currentTarget

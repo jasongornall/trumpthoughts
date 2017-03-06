@@ -20,6 +20,7 @@ body #viewport {
   height: 500px;
 }
 body .trix-container {
+  display: none;
   max-width: 640px;
   margin: 0 auto;
   text-align: left;
