@@ -245,3 +245,5 @@ for (_i = 0, _len = _ref.length; _i < _len; _i++) {
   response_type = _ref[_i];
   _fn(response_type);
 }
+
+route_url();

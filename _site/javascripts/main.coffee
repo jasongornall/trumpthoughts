@@ -187,3 +187,4 @@ for response_type in ['negative', 'positive']
           div '.body', -> snapshot.child('letter').val()
       ).prependTo("##{response_type}").hide().slideDown();
 
+route_url()

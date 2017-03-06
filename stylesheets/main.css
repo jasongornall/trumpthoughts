@@ -71,7 +71,7 @@ body #answers > div {
   max-width: 400px;
 }
 body #answers > div .response {
-  padding: 16px 16px 8px;
+  padding: 16px;
   margin-bottom: 5px;
   background: rgba(255,255,255,0.9);
 }
