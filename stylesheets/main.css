@@ -20,7 +20,6 @@ body #viewport {
   height: 500px;
 }
 body .trix-container {
-  display: none;
   max-width: 640px;
   margin: 0 auto;
   text-align: left;
@@ -56,7 +55,7 @@ body #map {
   height: 300px;
 }
 body #voice {
-  margin-bottom: 5px;
+  margin: 5px;
 }
 body #answers {
   white-space: nowrap;
@@ -69,12 +68,13 @@ body #answers > div {
   vertical-align: top;
   max-width: 400px;
 }
-body #answers > div#positive {
-  border: 1px solid #008000;
-}
-body #answers > div#negative {
-  border: 1px solid #f00;
-}
 body #answers > div .response {
-  border: 1px solid #000;
+  padding: 16px 16px 8px;
+  margin-bottom: 5px;
+}
+body #answers > div .response.positive {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #008000;
+}
+body #answers > div .response.negative {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #f00;
 }

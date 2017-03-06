@@ -70,14 +70,19 @@
     <div id = "auth"></div>
     </div>
     <div id="map"></div>
-    <div class = "trix-container" data-route = "/new-letter">
-        <form>
-           <textarea id = "trump-letter"></textarea>
-        </form>
-        <div class="submit btn btn-large btn-green" data-type = "positive" >Positive</div>
-        <div class="submit btn btn-large btn-red" data-type = "negative" >Negative</div>
+
+    <div id="popups">
+      <div class = "modalDialog letter" data-route = "/new-letter">
+        <div class = "wrapper trix-container">
+          <span class = "close ">x</span>
+          <form>
+             <textarea id = "trump-letter"></textarea>
+          </form>
+          <div class="submit btn btn-large btn-green" data-type = "positive" >Positive</div>
+          <div class="submit btn btn-large btn-red" data-type = "negative" >Negative</div>
+        </div>
+      </div>
     </div>
-    <div id="popups"></div>
 
     <div data-route = "">
 

@@ -76,15 +76,25 @@ firebase.auth().onAuthStateChanged (user) ->
 
 route_url = (path)->
   path = path || url 'path'
-  $('[data-route]').hide()
-  $("[data-route='#{path}']").show()
   history.replaceState(null, null, path);
+  switch path
+    when '/new-letter'
+      $("[data-route='#{path}']").fadeIn()
+
+    else
+
+      $('[data-route]').hide()
+      $("[data-route='#{path}']").show()
+
+
+softClose = (e) ->
+  $(e.currentTarget).closest('.modalDialog').fadeOut 'slow'
 
 handleClose = (e) ->
   $el = $(e.currentTarget).closest('.modalDialog').fadeOut 'slow', ->
     $(this).remove()
 
-loginPopup = ->
+loginPopup = (next) ->
   $('body #popups').append(teacup.render ->
     div '.modalDialog submit', ->
       div '.wrapper', ->
@@ -125,6 +135,8 @@ loginPopup = ->
 $('#voice').on 'click', (e) ->
   route_url '/new-letter'
 
+$('.modalDialog.letter .close').on 'click', softClose
+
 $('.submit').on 'click', (e) ->
   $el = $ e.currentTarget
   type = $el.data 'type'
@@ -145,10 +157,10 @@ $('.submit').on 'click', (e) ->
       letter: trump_letter
       location: ref.toString()
     }
+
+    firebase.database().ref("users/#{window.logged_in.uid}/data/last_submit").set firebase.database.ServerValue.TIMESTAMP
   else
     loginPopup()
-
-
 
 for response_type in ['negative', 'positive']
   do (response_type) ->
@@ -157,11 +169,14 @@ for response_type in ['negative', 'positive']
       lat = snapshot.child('geo/lat').val()
       lng = snapshot.child('geo/lng').val()
       if lat and lng
+        latLng = {lat: lat, lng: lng}
         marker = new google.maps.Marker {
-          position:  {lat: lat, lng: lng},
+          position: latLng,
           map: window.map
           animation: google.maps.Animation.DROP
         }
+        window.map.panTo(latLng);
+
 
       $(teacup.render ->
         div ".response #{response_type}", 'data': {
