@@ -20,6 +20,8 @@ firebase.auth().onAuthStateChanged (user) ->
   else
     window.logged_in = false
 
+
+
 loginPopup = ->
   $('body #popups').append(teacup.render ->
     div '.modalDialog submit', ->
@@ -27,15 +29,9 @@ loginPopup = ->
         span '.close', -> 'x'
         h3 -> 'Login to add your content'
         div '.navigation', ->
-          span '.option', 'data-option': 'google', ->
-            img src: 'https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg'
-            span -> 'Google'
           span '.option', 'data-option': 'facebook', ->
             img src: 'https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_facebook.svg'
             span -> 'Facebook'
-          span '.option', 'data-option': 'twitter', ->
-            img src: 'https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg'
-            span -> 'Twitter'
   )
   $('.modalDialog.submit').fadeIn()
   $('.modalDialog.submit .close').on 'click', (e) ->
@@ -45,10 +41,13 @@ loginPopup = ->
   $('.modalDialog.submit [data-option]').on 'click', (e) ->
     $el = $ e.currentTarget
     switch $el.data 'option'
-      when 'google'
-        provider = new firebase.auth.GoogleAuthProvider();
-        provider.addScope 'https://www.googleapis.com/auth/user.birthday.read'
-        provider.addScope 'https://www.googleapis.com/auth/userinfo.profile'
+      when 'facebook'
+        provider = new firebase.auth.FacebookAuthProvider();
+        provider.addScope('user_birthday')
+        provider.addScope('public_profile');
+        provider.addScope('email');
+        provider.addScope('user_location');
+        provider.addScope('user_hometown');
         firebase.auth().signInWithPopup(provider)
 
 $('.submit').on 'click', (e) ->

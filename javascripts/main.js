@@ -45,17 +45,7 @@ loginPopup = function() {
           return 'Login to add your content';
         });
         return div('.navigation', function() {
-          span('.option', {
-            'data-option': 'google'
-          }, function() {
-            img({
-              src: 'https://www.gstatic.com/mobilesdk/160512_mobilesdk/auth_service_google.svg'
-            });
-            return span(function() {
-              return 'Google';
-            });
-          });
-          span('.option', {
+          return span('.option', {
             'data-option': 'facebook'
           }, function() {
             img({
@@ -63,16 +53,6 @@ loginPopup = function() {
             });
             return span(function() {
               return 'Facebook';
-            });
-          });
-          return span('.option', {
-            'data-option': 'twitter'
-          }, function() {
-            img({
-              src: 'https://www.gstatic.com/mobilesdk/160409_mobilesdk/images/auth_service_twitter.svg'
-            });
-            return span(function() {
-              return 'Twitter';
             });
           });
         });
@@ -90,10 +70,13 @@ loginPopup = function() {
     var $el, provider;
     $el = $(e.currentTarget);
     switch ($el.data('option')) {
-      case 'google':
-        provider = new firebase.auth.GoogleAuthProvider();
-        provider.addScope('https://www.googleapis.com/auth/user.birthday.read');
-        provider.addScope('https://www.googleapis.com/auth/userinfo.profile');
+      case 'facebook':
+        provider = new firebase.auth.FacebookAuthProvider();
+        provider.addScope('user_birthday');
+        provider.addScope('public_profile');
+        provider.addScope('email');
+        provider.addScope('user_location');
+        provider.addScope('user_hometown');
         return firebase.auth().signInWithPopup(provider);
     }
   });
