@@ -182,13 +182,15 @@ getLetter = function(u_snap, l_snap, response_type) {
           return '';
         });
       });
-      a('.link.edit', {
-        href: "/edit/" + response_type + "/" + l_snap.key
-      }, function() {
-        return i('.fa fa-pencil', function() {
-          return '';
+      if (window.logged_in.uid === uid) {
+        a('.link.edit', {
+          href: "/edit/" + response_type + "/" + l_snap.key
+        }, function() {
+          return i('.fa fa-pencil', function() {
+            return '';
+          });
         });
-      });
+      }
       div('.body', function() {
         return l_snap.child('letter').val();
       });
@@ -358,16 +360,18 @@ $('.submit').on('click', function(e) {
     }
     return async.parallel([
       function(next) {
-        return ref.set({
-          letter: trump_letter,
+        var obj;
+        obj = {
+          letter: trump_letter.trim(),
           time: firebase.database.ServerValue.TIMESTAMP,
-          uid: window.logged_in.uid,
-          edited: edited
-        }, next);
-      }, function(next) {
-        var key;
-        key = ref.key;
-        return firebase.database().ref("users/" + window.logged_in.uid + "/" + type + "/" + key).set(1, next);
+          uid: window.logged_in.uid
+        };
+        if (edited) {
+          obj.edited = firebase.database.ServerValue.TIMESTAMP;
+        } else {
+          obj.time = firebase.database.ServerValue.TIMESTAMP;
+        }
+        return ref.setWithPriority(obj, 0 - Date.now(), next);
       }, function(next) {
         return firebase.database().ref("users/" + window.logged_in.uid + "/data/last_submit").set(firebase.database.ServerValue.TIMESTAMP, next);
       }
@@ -439,7 +443,7 @@ render = function() {
           });
           console.log(user_snap, snapshot, mod_res);
           letter = getLetter(user_snap, snapshot, mod_res);
-          $(letter).appendTo("#" + mod_res).hide().slideDown();
+          $(letter).prependTo("#" + mod_res).hide().slideDown();
           return handleLink();
         });
       });

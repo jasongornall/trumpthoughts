@@ -125,6 +125,7 @@ body #answers > div .response .user-header > img {
   background-clip: content-box;
   box-sizing: border-box;
   vertical-align: bottom;
+  object-fit: cover;
 }
 body #answers > div .response .user-header > .user {
   display: inline-block;

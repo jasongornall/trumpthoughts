@@ -123,8 +123,9 @@ getLetter = (u_snap, l_snap, response_type) ->
         i '.fa fa-link', -> ''
       a '.link.back', href: "/", ->
         i '.fa fa-arrow-left', -> ''
-      a '.link.edit', href: "/edit/#{response_type}/#{l_snap.key}", ->
-        i '.fa fa-pencil', -> ''
+      if window.logged_in.uid is uid
+        a '.link.edit', href: "/edit/#{response_type}/#{l_snap.key}", ->
+          i '.fa fa-pencil', -> ''
 
       div '.body', -> l_snap.child('letter').val()
 
@@ -272,16 +273,16 @@ $('.submit').on 'click', (e) ->
     async.parallel [
 
       (next) ->
-        ref.set {
-          letter: trump_letter
+        obj = {
+          letter: trump_letter.trim()
           time: firebase.database.ServerValue.TIMESTAMP
           uid: window.logged_in.uid
-          edited: edited
-        }, next
-
-      (next) ->
-        key = ref.key
-        firebase.database().ref("users/#{window.logged_in.uid}/#{type}/#{key}").set 1, next
+        }
+        if edited
+          obj.edited = firebase.database.ServerValue.TIMESTAMP
+        else
+          obj.time = firebase.database.ServerValue.TIMESTAMP
+        ref.setWithPriority obj, 0 - Date.now(), next
 
       (next) ->
         firebase.database().ref("users/#{window.logged_in.uid}/data/last_submit").set firebase.database.ServerValue.TIMESTAMP, next
@@ -344,7 +345,7 @@ render = ->
 
           console.log user_snap, snapshot, mod_res
           letter = getLetter(user_snap, snapshot, mod_res)
-          $(letter).appendTo("##{mod_res}").hide().slideDown();
+          $(letter).prependTo("##{mod_res}").hide().slideDown();
           handleLink()
 
 route_url()
