@@ -1,4 +1,3 @@
-localStorage.clear()
 msnry = null
 config = {
   apiKey: "AIzaSyBmPkme_3537O_YbLRlq27PiFMOtNi4vP4",
@@ -9,9 +8,31 @@ config = {
 }
 firebase.initializeApp(config);
 
+renderProfile = ->
+  $('body > #navigation > .profile').remove()
+  if window.logged_in
+    $('body > #navigation').prepend teacup.render ->
+      a href: '/profile', ->
+        span -> "profile: "
+        img src: window.logged_in.photoURL
+  else
+    $('body > #navigation > .profile').remove()
+    $('body > #navigation').prepend teacup.render ->
+      div '.profile', -> 'Login'
+    $('body > #navigation > .profile').on 'click', loginPopup
+
+try
+  temp_user = JSON.parse localStorage.getItem('user')
+  window.logged_in = temp_user
+  renderProfile()
+
 # move cursor
 firebase.auth().onAuthStateChanged (user) ->
-  if user
+  try
+    if window.logged_in?.uid is user.uid
+      return
+
+  if user and window.access_token
     async.waterfall [
       (finish) =>
         params = ("#{k}=#{encodeURIComponent v}" for k, v of {
@@ -66,26 +87,117 @@ firebase.auth().onAuthStateChanged (user) ->
         political: extra_info.political or null
         relationship_status: extra_info.relationship_status or null
       }
+      localStorage.setItem('user', JSON.stringify window.logged_in)
       firebase.database().ref("users/#{user.uid}/data").set window.logged_in
-      $('body > #auth').html teacup.render ->
-        div  '.btn', ->
-          span -> "logged in as: "
-          img src: user.photoURL
-          span -> " #{user.displayName}"
+      renderProfile()
   else
     window.logged_in = false
+    localStorage.removeItem('user')
+    renderProfile()
+
+
+handleLink = ->
+  console.log 'saddasdsa'
+  $('a').off('click').on 'click', (e) ->
+    e.preventDefault();
+    $el = $ e.currentTarget
+    href = $el.attr 'href'
+    path = url 'path', href
+    route_url(path or '/')
+    render()
+    console.log 'eh?'
+    return false
+
+getLetter = (u_snap, l_snap, response_type) ->
+  uid = l_snap.child('uid').val()
+
+  teacup.render ->
+    div ".response #{response_type}", ->
+      div '.user-header', ->
+        img src: u_snap.child('photoURL').val()
+        div '.user', ->
+          a '.name', href: "/users/#{uid}", ->
+            u_snap.child('displayName').val()
+          div '.time', -> jQuery.timeago l_snap.child('time').val()
+      a '.link.letter', href: "/#{response_type}/#{l_snap.key}", ->
+        i '.fa fa-link', -> ''
+      a '.link.back', href: "/", ->
+        i '.fa fa-arrow-left', -> ''
+      a '.link.edit', href: "/edit/#{response_type}/#{l_snap.key}", ->
+        i '.fa fa-pencil', -> ''
+
+      div '.body', -> l_snap.child('letter').val()
+
+      div '.footer', ->
+        span -> '* Edited' if l_snap.child('edited').val()
+
+RESPONSE_ARR = ['negative', 'positive']
+RESPONSE_LISTEN = 'child_added'
 
 route_url = (path)->
+  for listener in window.listeners or []
+    listener.off()
+  window.listeners = []
+
+  window.apply_filter = (ref) ->
+    return ref
+
+  $('body').attr('class','')
+  console.log 'path', path
   path = path || url 'path'
+
+  data = path.split('/')
   history.replaceState(null, null, path);
-  switch path
-    when '/new-letter'
-      $("[data-route='#{path}']").fadeIn()
 
-    else
+  new_path = "/#{data[1]}"
 
+  RESPONSE_ARR = ['negative', 'positive']
+  RESPONSE_LISTEN = 'child_added'
+  $("#negative, #positive").empty()
+
+  console.log new_path, 'new_path'
+  switch new_path
+
+    when '/profile'
       $('[data-route]').hide()
-      $("[data-route='#{path}']").show()
+      $el = $("[data-route='/profile']")
+      $('#logout').off('click').on 'click', (e) ->
+        localStorage.clear()
+        window.location = url('hostname')
+      $el.fadeIn()
+      window.apply_filter = (ref) ->
+        return ref.orderByChild('uid').equalTo(window.logged_in.uid)
+
+      $("[data-route='/']").show()
+
+    when '/edit'
+      $el = $("[data-route='/new-letter']")
+      $el.hide()
+      $el.addClass "#{data[2]}"
+      $el.attr 'data-save', "#{data[2]}/#{data[3]}"
+      RESPONSE_ARR = []
+      firebase.database().ref("#{data[2]}/#{data[3]}").once 'value', (snap) ->
+        $('#trump-letter').val snap.child('letter').val()
+        $el.fadeIn()
+
+    when '/new-letter'
+      $("[data-route='#{new_path}']").fadeIn()
+      RESPONSE_ARR = []
+
+    when '/positive', '/negative'
+      $('[data-route]').hide()
+
+      RESPONSE_ARR = ["#{data[1]}/#{data[2]}"]
+      RESPONSE_LISTEN = 'value'
+      console.log 'inside'
+      new_path = '/'
+      $('[data-route]').hide()
+      $("body").addClass 'big'
+      $("[data-route='#{new_path}']").show()
+    else
+      new_path = '/'
+      $('[data-route]').hide()
+      $("[data-route='#{new_path}']").show()
 
 
 softClose = (e) ->
@@ -144,47 +256,97 @@ $('.submit').on 'click', (e) ->
   if window.logged_in
     trump_letter = $('#trump-letter').val()
 
-    ref = firebase.database().ref(type).push()
-    ref.set {
-      letter: trump_letter
-      time: firebase.database.ServerValue.TIMESTAMP
-      uid: window.logged_in.uid
-      geo: {
-        lat: window.logged_in.lat
-        lng: window.logged_in.lng
-      }
-    }
-    firebase.database().ref("users/#{window.logged_in.uid}/letters").push {
-      letter: trump_letter
-      location: ref.toString()
-    }
+    edited = null
+    save = $el.closest('.letter').data 'save'
+    if save
+      save_data = save.split('/')
+      if save_data[0] isnt type
+        firebase.database().ref("users/#{window.logged_in.uid}/#{save}").remove()
+        firebase.database().ref(save).remove()
+        save = "#{type}/#{save_data[1]}"
+      ref = firebase.database().ref(save)
+      edited = true
+    else
+      ref = firebase.database().ref(type).push()
 
-    firebase.database().ref("users/#{window.logged_in.uid}/data/last_submit").set firebase.database.ServerValue.TIMESTAMP
+    async.parallel [
+
+      (next) ->
+        ref.set {
+          letter: trump_letter
+          time: firebase.database.ServerValue.TIMESTAMP
+          uid: window.logged_in.uid
+          edited: edited
+        }, next
+
+      (next) ->
+        key = ref.key
+        firebase.database().ref("users/#{window.logged_in.uid}/#{type}/#{key}").set 1, next
+
+      (next) ->
+        firebase.database().ref("users/#{window.logged_in.uid}/data/last_submit").set firebase.database.ServerValue.TIMESTAMP, next
+    ], ->
+      route_url("/#{type}/#{ref.key}")
+      render()
   else
     loginPopup()
 
-for response_type in ['negative', 'positive']
-  do (response_type) ->
-    firebase.database().ref(response_type).on 'child_added', (snapshot) ->
 
-      lat = snapshot.child('geo/lat').val()
-      lng = snapshot.child('geo/lng').val()
-      if lat and lng
-        latLng = {lat: lat, lng: lng}
-        marker = new google.maps.Marker {
-          position: latLng,
-          map: window.map
-          animation: google.maps.Animation.DROP
-        }
-        window.map.panTo(latLng);
+render = ->
+  uluru =  {
+    lat: -25.363
+    lng: 131.044
+  }
+  $('#map').empty()
+  window.map = new google.maps.Map $('#map')[0], {
+    zoom: 2
+    center: uluru
+   }
+
+  interval_id = null
+  interval_arr = []
+  pushMarker = (func)->
+    console.trace('wakka')
+    interval_arr.push func
+    if interval_id is null
+      interval_id = setInterval ( ->
+        if interval_arr.length is 0
+          clearInterval interval_id
+          interval_id = null
+        else
+          interval_arr.pop()()
+      ), 100
 
 
-      $(teacup.render ->
-        div ".response #{response_type}", 'data': {
-          key: snapshot.key
-          time: snapshot.child('time').val()
-        }, ->
-          div '.body', -> snapshot.child('letter').val()
-      ).prependTo("##{response_type}").hide().slideDown();
+  for response_type in RESPONSE_ARR
+    do (response_type) ->
+      mod_res = response_type.split('/')[0]
+
+      listen_ref = firebase.database().ref(response_type)
+      window.listeners.push listen_ref
+
+      listen_ref = window.apply_filter listen_ref
+      listen_ref.limitToLast(200).on RESPONSE_LISTEN, (snapshot) ->
+        uid = snapshot.child('uid').val()
+
+        firebase.database().ref("users/#{uid}/data").once 'value', (user_snap) ->
+          lat = user_snap.child('lat').val()
+          lng = user_snap.child('lng').val()
+          pushMarker ->
+            latLng = {lat: lat + Math.random() * 20, lng: lng + Math.random() * 20}
+            marker = new google.maps.Marker {
+              position: latLng,
+              map: window.map
+              animation: google.maps.Animation.DROP
+              zoom: 3
+            }
+            window.map.panTo(latLng);
+
+          console.log user_snap, snapshot, mod_res
+          letter = getLetter(user_snap, snapshot, mod_res)
+          $(letter).appendTo("##{mod_res}").hide().slideDown();
+          handleLink()
 
 route_url()
+render()
+

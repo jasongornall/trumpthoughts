@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <script type="text/javascript">
+      document.write("<base href='"+ window.location.protocol +'//' + window.location.host + "' >");
+    </script>
     <script>
       (function(){
         var redirect = sessionStorage.redirect;
@@ -43,7 +46,6 @@
     <link href="https://fonts.googleapis.com/css?family=Marck+Script" rel="stylesheet">
     <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.2.1/jssocials.css" />
     <link type="text/css" rel="stylesheet" href="https://cdn.jsdelivr.net/jquery.jssocials/1.2.1/jssocials-theme-classic.css" />
-    <link rel="stylesheet" type="text/css" href="libs/trix.css?t=1">
     <link rel="stylesheet" type="text/css" href="stylesheets/button.css?t=3">
 
 
@@ -61,36 +63,48 @@
     <script src="libs/teacup-config.js"></script>
     <script src="libs/async.min.js"></script>
     <script src="libs/url.min.js"></script>
-    <script type="text/javascript" src="libs/trix.js?t=1""></script>
+    <script type="text/javascript" src="libs/timeago.js""></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/jquery.jssocials/1.2.1/jssocials.min.js"></script>
     <script type="libs/jquery.history"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACP_s832P5zwwEwZ9VVNgelGoB-mekpDY"></script>
   </head>
   <body>
     <div class="main-header">Dear Trump</div>
-    <div id = "auth"></div>
-    </div>
     <div id="map"></div>
 
-    <div id="popups">
-      <div class = "modalDialog letter" data-route = "/new-letter">
-        <div class = "wrapper trix-container">
-          <span class = "close ">x</span>
-          <form>
-             <textarea id = "trump-letter"> Dear Trump, &#10  </textarea>
-          </form>
-          <div class="submit btn btn-large btn-green" data-type = "positive" >Positive</div>
-          <div class="submit btn btn-large btn-red" data-type = "negative" >Negative</div>
-        </div>
-      </div>
+    <div id="navigation">
+      <div class = "profile"> Login </div>
+      <a href= "/stats" class = "stats"> Stats </a>
+      <a href= "/" class = "letters"> letters </a>
     </div>
 
-    <div data-route = "">
 
+    <div id="popups">
+
+    </div>
+
+    <div data-route = "/profile">
+      <div id="logout" class="btn btn-large btn-green">Logout</div>
+    </div>
+
+    <div data-route = "/">
       <div id="voice" class="btn btn-large btn-green">Add Your Voice</div>
       <div id = "answers">
           <div id = "positive"></div>
           <div id = "negative"></div>
       </div>
+    </div>
+    <div class = "letter" data-route = "/new-letter">
+      <div class = "wrapper trix-container">
+        <span class = "close ">x</span>
+        <form>
+           <textarea id = "trump-letter"> Dear Trump, &#10  </textarea>
+        </form>
+        <div class="submit btn btn-large btn-green" data-type = "positive" >Positive</div>
+        <div class="submit btn btn-large btn-red" data-type = "negative" >Negative</div>
+      </div>
+    </div>
+    <div data-route = "/users">
     </div>
   </body>
 
@@ -104,9 +118,7 @@
         });
       }
     </script>
-    <script async defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyACP_s832P5zwwEwZ9VVNgelGoB-mekpDY&callback=initMap">
-    </script>
+
     <script src="javascripts/main.js"></script>
   </footer>
 </html>
