@@ -167,7 +167,7 @@ getLetter = function(u_snap, l_snap, response_type) {
         });
       });
       a('.link.letter', {
-        href: "/" + response_type + "/" + l_snap.key
+        href: "/letters/" + l_snap.key
       }, function() {
         return i('.fa fa-link', function() {
           return '';
@@ -182,7 +182,7 @@ getLetter = function(u_snap, l_snap, response_type) {
       });
       if (window.logged_in.uid === uid) {
         a('.link.edit', {
-          href: "/edit/" + response_type + "/" + l_snap.key
+          href: "/edit/letters/" + l_snap.key
         }, function() {
           return i('.fa fa-pencil', function() {
             return '';
@@ -203,7 +203,7 @@ getLetter = function(u_snap, l_snap, response_type) {
   });
 };
 
-RESPONSE_ARR = ['negative', 'positive'];
+RESPONSE_ARR = ['letters'];
 
 RESPONSE_LISTEN = 'child_added';
 
@@ -223,9 +223,9 @@ route_url = function(path) {
   data = path.split('/');
   history.replaceState(null, null, path);
   new_path = "/" + data[1];
-  RESPONSE_ARR = ['negative', 'positive'];
+  RESPONSE_ARR = ['letters'];
   RESPONSE_LISTEN = 'child_added';
-  $("#negative, #positive").empty();
+  $("#letters").empty();
   switch (new_path) {
     case '/profile':
       $('[data-route]').hide();
@@ -242,10 +242,9 @@ route_url = function(path) {
     case '/edit':
       $el = $("[data-route='/new-letter']");
       $el.hide();
-      $el.addClass("" + data[2]);
-      $el.data('save', "" + data[2] + "/" + data[3]);
+      $el.data('save', "letters/" + data[3]);
       RESPONSE_ARR = [];
-      return firebase.database().ref("" + data[2] + "/" + data[3]).once('value', function(snap) {
+      return firebase.database().ref("letters/" + data[3]).once('value', function(snap) {
         $('#trump-letter').val(snap.child('letter').val());
         return $el.fadeIn();
       });
@@ -256,10 +255,9 @@ route_url = function(path) {
       $('#trump-letter').val('Dear Trump');
       $("[data-route='" + new_path + "']").fadeIn();
       return RESPONSE_ARR = [];
-    case '/positive':
-    case '/negative':
+    case '/letters':
       $('[data-route]').hide();
-      RESPONSE_ARR = ["" + data[1] + "/" + data[2]];
+      RESPONSE_ARR = ["letters/" + data[2]];
       RESPONSE_LISTEN = 'value';
       new_path = '/';
       $('[data-route]').hide();
@@ -348,35 +346,38 @@ $('.submit').on('click', function(e) {
     debugger;
     if (save) {
       save_data = save.split('/');
-      if (save_data[0] !== type) {
-        firebase.database().ref("users/" + window.logged_in.uid + "/" + save).remove();
-        firebase.database().ref(save).remove();
-        save = "" + type + "/" + save_data[1];
-      }
       ref = firebase.database().ref(save);
       edited = true;
     } else {
-      ref = firebase.database().ref(type).push();
+      ref = firebase.database().ref('letters').push();
     }
     return async.parallel([
       function(next) {
         var obj;
         obj = {
           letter: trump_letter.trim(),
-          time: firebase.database.ServerValue.TIMESTAMP,
-          uid: window.logged_in.uid
+          uid: window.logged_in.uid,
+          type: type
         };
         if (edited) {
           obj.edited = firebase.database.ServerValue.TIMESTAMP;
         } else {
           obj.time = firebase.database.ServerValue.TIMESTAMP;
         }
-        return ref.setWithPriority(obj, Firebase.ServerValue.TIMESTAMP, next);
+        return ref.once('value', function(snap) {
+          var key, new_obj, val;
+          new_obj = snap.val() || {};
+          for (key in obj) {
+            val = obj[key];
+            new_obj[key] = val;
+          }
+          return ref.setWithPriority(new_obj, firebase.database.ServerValue.TIMESTAMP, next);
+        });
       }, function(next) {
         return firebase.database().ref("users/" + window.logged_in.uid + "/data/last_submit").set(firebase.database.ServerValue.TIMESTAMP, next);
       }
     ], function() {
-      route_url("/" + type + "/" + ref.key);
+      route_url("/letters/" + ref.key);
       return render();
     });
   } else {
@@ -414,8 +415,7 @@ render = function() {
   for (_i = 0, _len = RESPONSE_ARR.length; _i < _len; _i++) {
     response_type = RESPONSE_ARR[_i];
     _results.push((function(response_type) {
-      var listen_ref, mod_res;
-      mod_res = response_type.split('/')[0];
+      var listen_ref;
       listen_ref = firebase.database().ref(response_type);
       window.listeners.push(listen_ref);
       listen_ref = window.apply_filter(listen_ref);
@@ -423,7 +423,7 @@ render = function() {
         var uid;
         uid = snapshot.child('uid').val();
         return firebase.database().ref("users/" + uid + "/data").once('value', function(user_snap) {
-          var lat, letter, lng;
+          var lat, letter, lng, mod_res;
           lat = user_snap.child('lat').val();
           lng = user_snap.child('lng').val();
           pushMarker(function() {
@@ -440,8 +440,9 @@ render = function() {
             });
             return window.map.panTo(latLng);
           });
+          mod_res = snapshot.child('type').val();
           letter = getLetter(user_snap, snapshot, mod_res);
-          $(letter).appendTo("#" + mod_res).hide().slideDown();
+          $(letter).appendTo("#letters").hide().slideDown();
           return handleLink();
         });
       });

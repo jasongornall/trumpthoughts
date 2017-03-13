@@ -117,12 +117,12 @@ getLetter = (u_snap, l_snap, response_type) ->
           a '.name', href: "/users/#{uid}", ->
             u_snap.child('displayName').val()
           div '.time', -> jQuery.timeago l_snap.child('time').val()
-      a '.link.letter', href: "/#{response_type}/#{l_snap.key}", ->
+      a '.link.letter', href: "/letters/#{l_snap.key}", ->
         i '.fa fa-link', -> ''
       a '.link.back', href: "/", ->
         i '.fa fa-arrow-left', -> ''
       if window.logged_in.uid is uid
-        a '.link.edit', href: "/edit/#{response_type}/#{l_snap.key}", ->
+        a '.link.edit', href: "/edit/letters/#{l_snap.key}", ->
           i '.fa fa-pencil', -> ''
 
       div '.body', -> l_snap.child('letter').val()
@@ -130,7 +130,7 @@ getLetter = (u_snap, l_snap, response_type) ->
       div '.footer', ->
         span -> '* Edited' if l_snap.child('edited').val()
 
-RESPONSE_ARR = ['negative', 'positive']
+RESPONSE_ARR = ['letters']
 RESPONSE_LISTEN = 'child_added'
 
 route_url = (path)->
@@ -149,9 +149,9 @@ route_url = (path)->
 
   new_path = "/#{data[1]}"
 
-  RESPONSE_ARR = ['negative', 'positive']
+  RESPONSE_ARR = ['letters']
   RESPONSE_LISTEN = 'child_added'
-  $("#negative, #positive").empty()
+  $("#letters").empty()
 
   switch new_path
 
@@ -170,10 +170,9 @@ route_url = (path)->
     when '/edit'
       $el = $("[data-route='/new-letter']")
       $el.hide()
-      $el.addClass "#{data[2]}"
-      $el.data 'save', "#{data[2]}/#{data[3]}"
+      $el.data 'save', "letters/#{data[3]}"
       RESPONSE_ARR = []
-      firebase.database().ref("#{data[2]}/#{data[3]}").once 'value', (snap) ->
+      firebase.database().ref("letters/#{data[3]}").once 'value', (snap) ->
         $('#trump-letter').val snap.child('letter').val()
         $el.fadeIn()
 
@@ -185,10 +184,10 @@ route_url = (path)->
       $("[data-route='#{new_path}']").fadeIn()
       RESPONSE_ARR = []
 
-    when '/positive', '/negative'
+    when '/letters'
       $('[data-route]').hide()
 
-      RESPONSE_ARR = ["#{data[1]}/#{data[2]}"]
+      RESPONSE_ARR = ["letters/#{data[2]}"]
       RESPONSE_LISTEN = 'value'
       new_path = '/'
       $('[data-route]').hide()
@@ -261,33 +260,33 @@ $('.submit').on 'click', (e) ->
     debugger;
     if save
       save_data = save.split('/')
-      if save_data[0] isnt type
-        firebase.database().ref("users/#{window.logged_in.uid}/#{save}").remove()
-        firebase.database().ref(save).remove()
-        save = "#{type}/#{save_data[1]}"
       ref = firebase.database().ref(save)
       edited = true
     else
-      ref = firebase.database().ref(type).push()
+      ref = firebase.database().ref('letters').push()
 
     async.parallel [
 
       (next) ->
         obj = {
           letter: trump_letter.trim()
-          time: firebase.database.ServerValue.TIMESTAMP
           uid: window.logged_in.uid
+          type: type
         }
         if edited
           obj.edited = firebase.database.ServerValue.TIMESTAMP
         else
           obj.time = firebase.database.ServerValue.TIMESTAMP
-        ref.setWithPriority obj, Firebase.ServerValue.TIMESTAMP, next
+        ref.once 'value', (snap) ->
+          new_obj = snap.val() or {}
+          for key, val of obj
+            new_obj[key] = val
+          ref.setWithPriority new_obj, firebase.database.ServerValue.TIMESTAMP, next
 
       (next) ->
         firebase.database().ref("users/#{window.logged_in.uid}/data/last_submit").set firebase.database.ServerValue.TIMESTAMP, next
     ], ->
-      route_url("/#{type}/#{ref.key}")
+      route_url("/letters/#{ref.key}")
       render()
   else
     loginPopup()
@@ -320,8 +319,6 @@ render = ->
 
   for response_type in RESPONSE_ARR
     do (response_type) ->
-      mod_res = response_type.split('/')[0]
-
       listen_ref = firebase.database().ref(response_type)
       window.listeners.push listen_ref
 
@@ -342,8 +339,9 @@ render = ->
             }
             window.map.panTo(latLng);
 
+          mod_res = snapshot.child('type').val()
           letter = getLetter(user_snap, snapshot, mod_res)
-          $(letter).appendTo("##{mod_res}").hide().slideDown();
+          $(letter).appendTo("#letters").hide().slideDown();
           handleLink()
 
 route_url()

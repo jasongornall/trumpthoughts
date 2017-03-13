@@ -18,11 +18,11 @@ body
 
 
   &.big [data-route='/'] #answers >
-    #positive, #negative
-      width 100%
-      max-width 700px
-      margin 0 auto
-      display block
+    #letters
+      column-count 1
+      > .response
+        width 100%
+        max-width 100%
       .letter
         display none
       .back
@@ -75,19 +75,25 @@ body
         color #545044
   #answers
     white-space nowrap
-    > div
-      width: 50%;
+    > #letters
+      width: 100%;
       display: inline-block;
       white-space: pre-wrap;
       text-align: left;
       vertical-align: top;
-      max-width: 400px;
+      max-width 800px
+      column-count: 2;
+      column-gap: 10px;
 
       .response
+        max-width: 400px;
         padding 16px
-        margin-bottom 5px
         background rgba(255,255,255, .9)
         position relative
+        width 100%
+        display inline-block
+        box-sizing border-box
+        margin-bottom: 10px;
         &.positive
           box-shadow 0 0 0 1px rgba(0,0,0,.1), 0 2px 3px rgba(0,0,0,.2), inset 0 0 2px green
           .user-header

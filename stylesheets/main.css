@@ -16,19 +16,17 @@ body {
   font-family: -apple-system, sans-serif;
   background-size: 420px;
 }
-body.big [data-route='/'] #answers > #positive,
-body.big [data-route='/'] #answers > #negative {
-  width: 100%;
-  max-width: 700px;
-  margin: 0 auto;
-  display: block;
+body.big [data-route='/'] #answers > #letters {
+  column-count: 1;
 }
-body.big [data-route='/'] #answers > #positive .letter,
-body.big [data-route='/'] #answers > #negative .letter {
+body.big [data-route='/'] #answers > #letters > .response {
+  width: 100%;
+  max-width: 100%;
+}
+body.big [data-route='/'] #answers > #letters .letter {
   display: none;
 }
-body.big [data-route='/'] #answers > #positive .back,
-body.big [data-route='/'] #answers > #negative .back {
+body.big [data-route='/'] #answers > #letters .back {
   display: inline-block;
 }
 body #viewport {
@@ -89,36 +87,42 @@ body #navigation > div:hover {
 body #answers {
   white-space: nowrap;
 }
-body #answers > div {
-  width: 50%;
+body #answers > #letters {
+  width: 100%;
   display: inline-block;
   white-space: pre-wrap;
   text-align: left;
   vertical-align: top;
-  max-width: 400px;
+  max-width: 800px;
+  column-count: 2;
+  column-gap: 10px;
 }
-body #answers > div .response {
+body #answers > #letters .response {
+  max-width: 400px;
   padding: 16px;
-  margin-bottom: 5px;
   background: rgba(255,255,255,0.9);
   position: relative;
+  width: 100%;
+  display: inline-block;
+  box-sizing: border-box;
+  margin-bottom: 10px;
 }
-body #answers > div .response.positive {
+body #answers > #letters .response.positive {
   box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #008000;
 }
-body #answers > div .response.positive .user-header {
+body #answers > #letters .response.positive .user-header {
   border-bottom: 1px solid rgba(0,128,0,0.2);
 }
-body #answers > div .response.negative {
+body #answers > #letters .response.negative {
   box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #f00;
 }
-body #answers > div .response.negative .user-header {
+body #answers > #letters .response.negative .user-header {
   border-bottom: 1px solid rgba(255,0,0,0.2);
 }
-body #answers > div .response .user-header {
+body #answers > #letters .response .user-header {
   padding: 10px 0px;
 }
-body #answers > div .response .user-header > img {
+body #answers > #letters .response .user-header > img {
   border-radius: 49.9%;
   width: 48px;
   height: 48px;
@@ -127,38 +131,38 @@ body #answers > div .response .user-header > img {
   vertical-align: bottom;
   object-fit: cover;
 }
-body #answers > div .response .user-header > .user {
+body #answers > #letters .response .user-header > .user {
   display: inline-block;
   margin-left: 10px;
 }
-body #answers > div .response .user-header > .user > .name:hover {
+body #answers > #letters .response .user-header > .user > .name:hover {
   color: #0084bf;
   text-decoration: underline;
   cursor: pointer;
 }
-body #answers > div .response .user-header > .user > .time {
+body #answers > #letters .response .user-header > .user > .time {
   font-weight: 300;
 }
-body #answers > div .response .back {
+body #answers > #letters .response .back {
   display: none;
 }
-body #answers > div .response .link {
+body #answers > #letters .response .link {
   position: absolute;
   right: 10px;
   top: 10px;
   opacity: 0.3;
   cursor: pointer;
 }
-body #answers > div .response .link:hover {
+body #answers > #letters .response .link:hover {
   opacity: 1;
 }
-body #answers > div .response .edit {
+body #answers > #letters .response .edit {
   right: 30px;
 }
-body #answers > div .response .body {
+body #answers > #letters .response .body {
   padding: 10px 0px;
 }
-body #answers > div .response .footer {
+body #answers > #letters .response .footer {
   font-size: 9px;
   opacity: 0.5;
 }
