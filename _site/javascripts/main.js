@@ -251,7 +251,7 @@ route_url = function(path) {
       });
     case '/new-letter':
       $el = $("[data-route='/new-letter']");
-      $el.attr('class', '');
+      $el.removeClass('negative positive');
       $el.data('save', '');
       $('#trump-letter').val('Dear Trump');
       $("[data-route='" + new_path + "']").fadeIn();
@@ -371,7 +371,7 @@ $('.submit').on('click', function(e) {
         } else {
           obj.time = firebase.database.ServerValue.TIMESTAMP;
         }
-        return ref.setWithPriority(obj, 0 - Date.now(), next);
+        return ref.setWithPriority(obj, Firebase.ServerValue.TIMESTAMP, next);
       }, function(next) {
         return firebase.database().ref("users/" + window.logged_in.uid + "/data/last_submit").set(firebase.database.ServerValue.TIMESTAMP, next);
       }

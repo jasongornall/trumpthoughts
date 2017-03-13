@@ -179,7 +179,7 @@ route_url = (path)->
 
     when '/new-letter'
       $el = $("[data-route='/new-letter']")
-      $el.attr 'class', ''
+      $el.removeClass 'negative positive'
       $el.data 'save', ''
       $('#trump-letter').val 'Dear Trump'
       $("[data-route='#{new_path}']").fadeIn()
@@ -282,7 +282,7 @@ $('.submit').on 'click', (e) ->
           obj.edited = firebase.database.ServerValue.TIMESTAMP
         else
           obj.time = firebase.database.ServerValue.TIMESTAMP
-        ref.setWithPriority obj, 0 - Date.now(), next
+        ref.setWithPriority obj, Firebase.ServerValue.TIMESTAMP, next
 
       (next) ->
         firebase.database().ref("users/#{window.logged_in.uid}/data/last_submit").set firebase.database.ServerValue.TIMESTAMP, next
