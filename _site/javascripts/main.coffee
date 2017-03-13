@@ -1,3 +1,21 @@
+window.redIcon = new L.Icon({
+  iconUrl: 'img/marker-icon-2x-red.png',
+  shadowUrl: 'img/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
+window.greenIcon = new L.Icon({
+  iconUrl: 'img/marker-icon-2x-green.png',
+  shadowUrl: 'img/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
+
 msnry = null
 config = {
   apiKey: "AIzaSyBmPkme_3537O_YbLRlq27PiFMOtNi4vP4",
@@ -365,9 +383,12 @@ render = ->
         firebase.database().ref("users/#{uid}/data").once 'value', (user_snap) ->
           lat = user_snap.child('lat').val()
           lng = user_snap.child('lng').val()
+          mod_res = snapshot.child('type').val()
+          icon = if mod_res is 'negative' then redIcon else greenIcon
+
+          console.log icon, '111'
           pushMarker ->
-            latLng = {lat: lat + Math.random() * 20, lng: lng + Math.random() * 20}
-            L.marker([lat + Math.random() * 20, lng + Math.random() * 20] )
+            L.marker([lat, lng], {icon: icon})
             .on('click', (e) ->
               route_url("/letters/#{snapshot.key}")
               render()
@@ -375,7 +396,7 @@ render = ->
             )
             .addTo( leaf_map );
 
-          mod_res = snapshot.child('type').val()
+
           letter = getLetter(user_snap, snapshot, mod_res)
           $item = $(letter)
           $msnry.append($item).masonry( 'appended', $item );
