@@ -182,6 +182,10 @@ route_url = (path)->
         $el.fadeIn()
 
     when '/new-letter'
+      $el = $("[data-route='/new-letter']")
+      $el.attr 'class', ''
+      $el.attr 'data-save', ''
+      $('#trump-letter').val 'Dear Trump'
       $("[data-route='#{new_path}']").fadeIn()
       RESPONSE_ARR = []
 

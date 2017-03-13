@@ -254,6 +254,10 @@ route_url = function(path) {
         return $el.fadeIn();
       });
     case '/new-letter':
+      $el = $("[data-route='/new-letter']");
+      $el.attr('class', '');
+      $el.attr('data-save', '');
+      $('#trump-letter').val('Dear Trump');
       $("[data-route='" + new_path + "']").fadeIn();
       return RESPONSE_ARR = [];
     case '/positive':
