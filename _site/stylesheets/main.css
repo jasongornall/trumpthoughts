@@ -93,9 +93,6 @@ body #answers > #letters {
   white-space: pre-wrap;
   text-align: left;
   vertical-align: top;
-  max-width: 800px;
-  column-count: 2;
-  column-gap: 10px;
 }
 body #answers > #letters .response {
   max-width: 400px;
@@ -105,7 +102,6 @@ body #answers > #letters .response {
   width: 100%;
   display: inline-block;
   box-sizing: border-box;
-  margin-bottom: 10px;
 }
 body #answers > #letters .response.positive {
   box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #008000;
@@ -165,4 +161,7 @@ body #answers > #letters .response .body {
 body #answers > #letters .response .footer {
   font-size: 9px;
   opacity: 0.5;
+}
+body #answers > #letters .response .jssocials {
+  font-size: 8px;
 }

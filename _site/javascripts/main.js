@@ -136,9 +136,12 @@ firebase.auth().onAuthStateChanged(function(user) {
 handleLink = function() {
   return $('a').off('click').on('click', function(e) {
     var $el, href, path;
-    e.preventDefault();
     $el = $(e.currentTarget);
     href = $el.attr('href');
+    if (href[0] !== '/') {
+      return;
+    }
+    e.preventDefault();
     path = url('path', href);
     route_url(path || '/');
     render();
@@ -147,9 +150,9 @@ handleLink = function() {
 };
 
 getLetter = function(u_snap, l_snap, response_type) {
-  var uid;
+  var $el, path, res, uid;
   uid = l_snap.child('uid').val();
-  return teacup.render(function() {
+  res = teacup.render(function() {
     return div(".response " + response_type, function() {
       div('.user-header', function() {
         img({
@@ -192,23 +195,42 @@ getLetter = function(u_snap, l_snap, response_type) {
       div('.body', function() {
         return l_snap.child('letter').val();
       });
-      return div('.footer', function() {
+      div('.footer', function() {
         return span(function() {
           if (l_snap.child('edited').val()) {
             return '* Edited';
           }
         });
       });
+      return div('.action-footer');
     });
   });
+  $el = $(res);
+  path = $(res).find('.link.letter').attr('href');
+  $el.find('.action-footer').jsSocials({
+    url: "" + window.location.origin + path,
+    text: l_snap.child('letter').val(),
+    showLabel: false,
+    showCount: false,
+    shares: ["twitter", "facebook"]
+  });
+  return $el;
 };
 
 RESPONSE_ARR = ['letters'];
 
 RESPONSE_LISTEN = 'child_added';
 
+$(window).off('resize', function() {});
+
+$(window).on('resize', function() {
+  var width;
+  width = Math.floor($(window).width() / 400);
+  return $('#letters').css('max-width', "" + ((width || 1) * 400) + "px");
+});
+
 route_url = function(path) {
-  var $el, data, listener, new_path, _i, _len, _ref;
+  var $el, data, listener, new_path, _i, _len, _ref, _ref1;
   _ref = window.listeners || [];
   for (_i = 0, _len = _ref.length; _i < _len; _i++) {
     listener = _ref[_i];
@@ -226,6 +248,15 @@ route_url = function(path) {
   RESPONSE_ARR = ['letters'];
   RESPONSE_LISTEN = 'child_added';
   $("#letters").empty();
+  $("#letters").attr('style', '');
+  if ((_ref1 = window.$msnry) != null) {
+    _ref1.masonry('destroy');
+  }
+  $(window).trigger('resize');
+  window.$msnry = $('#letters').masonry({
+    itemSelector: '.response',
+    columnWidth: 400
+  });
   switch (new_path) {
     case '/profile':
       $('[data-route]').hide();
@@ -423,7 +454,7 @@ render = function() {
         var uid;
         uid = snapshot.child('uid').val();
         return firebase.database().ref("users/" + uid + "/data").once('value', function(user_snap) {
-          var lat, letter, lng, mod_res;
+          var $item, lat, letter, lng, mod_res;
           lat = user_snap.child('lat').val();
           lng = user_snap.child('lng').val();
           pushMarker(function() {
@@ -442,7 +473,8 @@ render = function() {
           });
           mod_res = snapshot.child('type').val();
           letter = getLetter(user_snap, snapshot, mod_res);
-          $(letter).appendTo("#letters").hide().slideDown();
+          $item = $(letter);
+          $msnry.append($item).masonry('appended', $item);
           return handleLink();
         });
       });

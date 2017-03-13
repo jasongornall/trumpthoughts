@@ -98,9 +98,11 @@ firebase.auth().onAuthStateChanged (user) ->
 
 handleLink = ->
   $('a').off('click').on 'click', (e) ->
-    e.preventDefault();
+
     $el = $ e.currentTarget
     href = $el.attr 'href'
+    return if href[0] isnt '/'
+    e.preventDefault();
     path = url 'path', href
     route_url(path or '/')
     render()
@@ -109,7 +111,7 @@ handleLink = ->
 getLetter = (u_snap, l_snap, response_type) ->
   uid = l_snap.child('uid').val()
 
-  teacup.render ->
+  res = teacup.render ->
     div ".response #{response_type}", ->
       div '.user-header', ->
         img src: u_snap.child('photoURL').val()
@@ -130,8 +132,30 @@ getLetter = (u_snap, l_snap, response_type) ->
       div '.footer', ->
         span -> '* Edited' if l_snap.child('edited').val()
 
+      div '.action-footer'
+
+  $el = $(res)
+  path = $(res).find('.link.letter').attr 'href'
+  $el.find('.action-footer').jsSocials {
+    url: "#{window.location.origin}#{path}"
+    text: l_snap.child('letter').val()
+    showLabel: false
+    showCount: false
+    shares: [
+      "twitter"
+      "facebook"
+    ]
+  }
+  return $el
+
+
 RESPONSE_ARR = ['letters']
 RESPONSE_LISTEN = 'child_added'
+
+$(window).off 'resize', ->
+$(window).on 'resize', ->
+  width = Math.floor $(window).width() / 400
+  $('#letters').css 'max-width', "#{(width or 1) * 400}px"
 
 route_url = (path)->
   for listener in window.listeners or []
@@ -152,6 +176,13 @@ route_url = (path)->
   RESPONSE_ARR = ['letters']
   RESPONSE_LISTEN = 'child_added'
   $("#letters").empty()
+  $("#letters").attr 'style', ''
+  window.$msnry?.masonry('destroy')
+  $(window).trigger 'resize'
+  window.$msnry = $('#letters').masonry {
+    itemSelector: '.response'
+    columnWidth: 400
+  }
 
   switch new_path
 
@@ -291,7 +322,6 @@ $('.submit').on 'click', (e) ->
   else
     loginPopup()
 
-
 render = ->
   uluru =  {
     lat: -25.363
@@ -341,7 +371,8 @@ render = ->
 
           mod_res = snapshot.child('type').val()
           letter = getLetter(user_snap, snapshot, mod_res)
-          $(letter).appendTo("#letters").hide().slideDown();
+          $item = $(letter)
+          $msnry.append($item).masonry( 'appended', $item );
           handleLink()
 
 route_url()
