@@ -97,7 +97,6 @@ firebase.auth().onAuthStateChanged (user) ->
 
 
 handleLink = ->
-  console.log 'saddasdsa'
   $('a').off('click').on 'click', (e) ->
     e.preventDefault();
     $el = $ e.currentTarget
@@ -105,7 +104,6 @@ handleLink = ->
     path = url 'path', href
     route_url(path or '/')
     render()
-    console.log 'eh?'
     return false
 
 getLetter = (u_snap, l_snap, response_type) ->
@@ -144,7 +142,6 @@ route_url = (path)->
     return ref
 
   $('body').attr('class','')
-  console.log 'path', path
   path = path || url 'path'
 
   data = path.split('/')
@@ -156,7 +153,6 @@ route_url = (path)->
   RESPONSE_LISTEN = 'child_added'
   $("#negative, #positive").empty()
 
-  console.log new_path, 'new_path'
   switch new_path
 
     when '/profile'
@@ -175,7 +171,7 @@ route_url = (path)->
       $el = $("[data-route='/new-letter']")
       $el.hide()
       $el.addClass "#{data[2]}"
-      $el.attr 'data-save', "#{data[2]}/#{data[3]}"
+      $el.data 'save', "#{data[2]}/#{data[3]}"
       RESPONSE_ARR = []
       firebase.database().ref("#{data[2]}/#{data[3]}").once 'value', (snap) ->
         $('#trump-letter').val snap.child('letter').val()
@@ -184,7 +180,7 @@ route_url = (path)->
     when '/new-letter'
       $el = $("[data-route='/new-letter']")
       $el.attr 'class', ''
-      $el.attr 'data-save', ''
+      $el.data 'save', ''
       $('#trump-letter').val 'Dear Trump'
       $("[data-route='#{new_path}']").fadeIn()
       RESPONSE_ARR = []
@@ -194,7 +190,6 @@ route_url = (path)->
 
       RESPONSE_ARR = ["#{data[1]}/#{data[2]}"]
       RESPONSE_LISTEN = 'value'
-      console.log 'inside'
       new_path = '/'
       $('[data-route]').hide()
       $("body").addClass 'big'
@@ -263,6 +258,7 @@ $('.submit').on 'click', (e) ->
 
     edited = null
     save = $el.closest('.letter').data 'save'
+    debugger;
     if save
       save_data = save.split('/')
       if save_data[0] isnt type
@@ -311,7 +307,6 @@ render = ->
   interval_id = null
   interval_arr = []
   pushMarker = (func)->
-    console.trace('wakka')
     interval_arr.push func
     if interval_id is null
       interval_id = setInterval ( ->
@@ -347,9 +342,8 @@ render = ->
             }
             window.map.panTo(latLng);
 
-          console.log user_snap, snapshot, mod_res
           letter = getLetter(user_snap, snapshot, mod_res)
-          $(letter).prependTo("##{mod_res}").hide().slideDown();
+          $(letter).appendTo("##{mod_res}").hide().slideDown();
           handleLink()
 
 route_url()

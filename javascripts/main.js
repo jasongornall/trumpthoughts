@@ -134,7 +134,6 @@ firebase.auth().onAuthStateChanged(function(user) {
 });
 
 handleLink = function() {
-  console.log('saddasdsa');
   return $('a').off('click').on('click', function(e) {
     var $el, href, path;
     e.preventDefault();
@@ -143,7 +142,6 @@ handleLink = function() {
     path = url('path', href);
     route_url(path || '/');
     render();
-    console.log('eh?');
     return false;
   });
 };
@@ -221,7 +219,6 @@ route_url = function(path) {
     return ref;
   };
   $('body').attr('class', '');
-  console.log('path', path);
   path = path || url('path');
   data = path.split('/');
   history.replaceState(null, null, path);
@@ -229,7 +226,6 @@ route_url = function(path) {
   RESPONSE_ARR = ['negative', 'positive'];
   RESPONSE_LISTEN = 'child_added';
   $("#negative, #positive").empty();
-  console.log(new_path, 'new_path');
   switch (new_path) {
     case '/profile':
       $('[data-route]').hide();
@@ -247,7 +243,7 @@ route_url = function(path) {
       $el = $("[data-route='/new-letter']");
       $el.hide();
       $el.addClass("" + data[2]);
-      $el.attr('data-save', "" + data[2] + "/" + data[3]);
+      $el.data('save', "" + data[2] + "/" + data[3]);
       RESPONSE_ARR = [];
       return firebase.database().ref("" + data[2] + "/" + data[3]).once('value', function(snap) {
         $('#trump-letter').val(snap.child('letter').val());
@@ -256,7 +252,7 @@ route_url = function(path) {
     case '/new-letter':
       $el = $("[data-route='/new-letter']");
       $el.attr('class', '');
-      $el.attr('data-save', '');
+      $el.data('save', '');
       $('#trump-letter').val('Dear Trump');
       $("[data-route='" + new_path + "']").fadeIn();
       return RESPONSE_ARR = [];
@@ -265,7 +261,6 @@ route_url = function(path) {
       $('[data-route]').hide();
       RESPONSE_ARR = ["" + data[1] + "/" + data[2]];
       RESPONSE_LISTEN = 'value';
-      console.log('inside');
       new_path = '/';
       $('[data-route]').hide();
       $("body").addClass('big');
@@ -350,6 +345,7 @@ $('.submit').on('click', function(e) {
     trump_letter = $('#trump-letter').val();
     edited = null;
     save = $el.closest('.letter').data('save');
+    debugger;
     if (save) {
       save_data = save.split('/');
       if (save_data[0] !== type) {
@@ -402,7 +398,6 @@ render = function() {
   interval_id = null;
   interval_arr = [];
   pushMarker = function(func) {
-    console.trace('wakka');
     interval_arr.push(func);
     if (interval_id === null) {
       return interval_id = setInterval((function() {
@@ -445,9 +440,8 @@ render = function() {
             });
             return window.map.panTo(latLng);
           });
-          console.log(user_snap, snapshot, mod_res);
           letter = getLetter(user_snap, snapshot, mod_res);
-          $(letter).prependTo("#" + mod_res).hide().slideDown();
+          $(letter).appendTo("#" + mod_res).hide().slideDown();
           return handleLink();
         });
       });
