@@ -328,10 +328,16 @@ render = ->
     lng: 131.044
   }
   $('#map').empty()
-  window.map = new google.maps.Map $('#map')[0], {
+  window.leaf_map?.remove()
+  window.leaf_map = L.map 'map', {
+    center: [20.0, 5.0],
+    minZoom: 2,
     zoom: 2
-    center: uluru
-   }
+  }
+  L.tileLayer( 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+      subdomains: ['a','b','c']
+  }).addTo( leaf_map );
 
   interval_id = null
   interval_arr = []
@@ -361,13 +367,13 @@ render = ->
           lng = user_snap.child('lng').val()
           pushMarker ->
             latLng = {lat: lat + Math.random() * 20, lng: lng + Math.random() * 20}
-            marker = new google.maps.Marker {
-              position: latLng,
-              map: window.map
-              animation: google.maps.Animation.DROP
-              zoom: 3
-            }
-            window.map.panTo(latLng);
+            L.marker([lat + Math.random() * 20, lng + Math.random() * 20] )
+            .on('click', (e) ->
+              route_url("/letters/#{snapshot.key}")
+              render()
+              return
+            )
+            .addTo( leaf_map );
 
           mod_res = snapshot.child('type').val()
           letter = getLetter(user_snap, snapshot, mod_res)

@@ -417,16 +417,24 @@ $('.submit').on('click', function(e) {
 });
 
 render = function() {
-  var interval_arr, interval_id, pushMarker, response_type, uluru, _i, _len, _results;
+  var interval_arr, interval_id, pushMarker, response_type, uluru, _i, _len, _ref, _results;
   uluru = {
     lat: -25.363,
     lng: 131.044
   };
   $('#map').empty();
-  window.map = new google.maps.Map($('#map')[0], {
-    zoom: 2,
-    center: uluru
+  if ((_ref = window.leaf_map) != null) {
+    _ref.remove();
+  }
+  window.leaf_map = L.map('map', {
+    center: [20.0, 5.0],
+    minZoom: 2,
+    zoom: 2
   });
+  L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    subdomains: ['a', 'b', 'c']
+  }).addTo(leaf_map);
   interval_id = null;
   interval_arr = [];
   pushMarker = function(func) {
@@ -458,18 +466,15 @@ render = function() {
           lat = user_snap.child('lat').val();
           lng = user_snap.child('lng').val();
           pushMarker(function() {
-            var latLng, marker;
+            var latLng;
             latLng = {
               lat: lat + Math.random() * 20,
               lng: lng + Math.random() * 20
             };
-            marker = new google.maps.Marker({
-              position: latLng,
-              map: window.map,
-              animation: google.maps.Animation.DROP,
-              zoom: 3
-            });
-            return window.map.panTo(latLng);
+            return L.marker([lat + Math.random() * 20, lng + Math.random() * 20]).on('click', function(e) {
+              route_url("/letters/" + snapshot.key);
+              render();
+            }).addTo(leaf_map);
           });
           mod_res = snapshot.child('type').val();
           letter = getLetter(user_snap, snapshot, mod_res);
