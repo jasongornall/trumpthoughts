@@ -1,168 +1,55 @@
-.main-header {
-  text-align: center;
-  font-family: sans-serif;
-  font-size: 64px;
-  text-transform: uppercase;
-  color: #f00;
-  text-shadow: 2px 2px 0px #fff, 4px 4px 0px #00f;
-}
-body {
-  text-align: center;
-  margin: 0;
-  padding: 0;
-  background: #fff;
-  color: #000;
-  line-height: 1.5;
-  font-family: -apple-system, sans-serif;
-  background: #f5f5f5;
-}
-body.big [data-route='/'] #answers > #letters {
-  column-count: 1;
-}
-body.big [data-route='/'] #answers > #letters > .response {
+html {
+  background-image: url("../images/background.jpg");
+  background-size: cover;
+  height: 100%;
   width: 100%;
-  max-width: 100%;
+  background-position: center bottom;
+  background-attachment: fixed;
 }
-body.big [data-route='/'] #answers > #letters .letter {
-  display: none;
+html #front-background {
+  background-image: url("../images/background-front.png");
+  background-size: cover;
+  height: 100%;
+  width: 100%;
+  background-position: center bottom;
+  position: fixed;
+  top: 0;
+  left: 0;
 }
-body.big [data-route='/'] #answers > #letters .back {
-  display: inline-block;
+html #body {
+  position: relative;
+  z-index: 100;
 }
-body #viewport {
-  width: 500px;
-  height: 500px;
-}
-body .trix-container {
-  max-width: 640px;
-  margin: 0 auto;
-  text-align: left;
-}
-body .trix-container #deartrump {
-  min-height: 35em;
-  padding: 0.4em 0.6em;
-}
-body #popups > .submit {
+html #body .main-header {
+  font: 400 130px/0.8 'Cookie', Helvetica, sans-serif;
   color: #fff;
+  text-shadow: 4px 4px 3px rgba(0,0,0,0.1);
+  text-align: center;
+  padding-top: 75px;
+  font-size: 90px;
+  height: 1em;
 }
-body #popups > .submit .navigation .option {
+html #body #navigation {
+  text-align: center;
+}
+html #body #navigation > a {
+  color: #fff;
   margin: 0 10px;
 }
-body #popups > .submit .navigation .option > span {
-  position: relative;
-  top: -3px;
-  left: 5px;
+html #body #navigation > a:hover {
+  color: #ffd700;
 }
-body #map {
-  height: 300px;
+html #body #routes {
+  position: relative;
+  z-index: 10;
+  color: #fff;
   max-width: 800px;
   margin: 0 auto;
+  margin-top: 100px;
+  background: rgba(0,0,0,0.4);
 }
-body #voice {
-  margin: 5px;
-}
-body #navigation {
-  font-size: 21px;
-  max-width: 800px;
-  margin: 0 auto;
-  display: flex;
-  justify-content: space-around;
-  padding: 10px 0;
-}
-body #navigation img {
-  width: 25px;
-  height: 25px;
-  border-radius: 25px;
-  vertical-align: middle;
-}
-body #navigation > a,
-body #navigation > div {
-  color: #928b6e;
-  display: inline-block;
-}
-body #navigation > a:hover,
-body #navigation > div:hover {
-  color: #545044;
-}
-body #answers {
-  white-space: nowrap;
-}
-body #answers > #letters {
-  width: 100%;
-  display: inline-block;
-  white-space: pre-wrap;
-  text-align: left;
-  vertical-align: top;
-}
-body #answers > #letters .response {
-  max-width: 390px;
-  padding: 16px;
-  background: rgba(255,255,255,0.9);
-  position: relative;
-  width: 100%;
-  display: inline-block;
-  box-sizing: border-box;
-  margin: 5px;
-}
-body #answers > #letters .response.positive {
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #008000;
-}
-body #answers > #letters .response.positive .user-header {
-  border-bottom: 1px solid rgba(0,128,0,0.2);
-}
-body #answers > #letters .response.negative {
-  box-shadow: 0 0 0 1px rgba(0,0,0,0.1), 0 2px 3px rgba(0,0,0,0.2), inset 0 0 2px #f00;
-}
-body #answers > #letters .response.negative .user-header {
-  border-bottom: 1px solid rgba(255,0,0,0.2);
-}
-body #answers > #letters .response .user-header {
-  padding: 10px 0px;
-}
-body #answers > #letters .response .user-header > img {
-  border-radius: 49.9%;
-  width: 48px;
-  height: 48px;
-  background-clip: content-box;
-  box-sizing: border-box;
-  vertical-align: bottom;
-  object-fit: cover;
-}
-body #answers > #letters .response .user-header > .user {
-  display: inline-block;
-  margin-left: 10px;
-}
-body #answers > #letters .response .user-header > .user > .name:hover {
-  color: #0084bf;
-  text-decoration: underline;
-  cursor: pointer;
-}
-body #answers > #letters .response .user-header > .user > .time {
-  font-weight: 300;
-}
-body #answers > #letters .response .back {
-  display: none;
-}
-body #answers > #letters .response .link {
-  position: absolute;
-  right: 10px;
-  top: 10px;
-  opacity: 0.3;
-  cursor: pointer;
-}
-body #answers > #letters .response .link:hover {
-  opacity: 1;
-}
-body #answers > #letters .response .edit {
-  right: 30px;
-}
-body #answers > #letters .response .body {
-  padding: 10px 0px;
-}
-body #answers > #letters .response .footer {
-  font-size: 9px;
-  opacity: 0.5;
-}
-body #answers > #letters .response .jssocials {
-  font-size: 8px;
+html #body #routes [data-route = "/rsvp"] iframe {
+  width: 800px;
+  height: 1675px;
+  max-width: 100%;
 }
